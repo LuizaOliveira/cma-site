@@ -3,11 +3,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #01165A;
+  --secondary: #F97D0E;
+  --text-color: #6A80B0;
+  --text-darkgray: #313164;
+  --ligth-gray: #A9B5CE
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-text-custom: var(--text-color);
+  --color-text-darkgray: var(--text-darkgray);
+  --color-ligth-gray: var(--ligth-gray);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -19,8 +29,37 @@
   }
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
 }
+
+/* Classes customizadas para as cores */
+.text-primary { color: #01165A; }
+.bg-primary { background-color: #01165A; }
+.border-primary { border-color: #01165A; }
+
+.text-secondary { color: #F97D0E; }
+.bg-secondary { background-color: #F97D0E; }
+.border-secondary { border-color: #F97D0E; }
+
+.text-custom { color: #6A80B0; }
+.bg-custom { background-color: #6A80B0; }
+
+.text-darkgray { color: #313164; }
+.bg-darkgray { background-color: #313164; }
+.border-darkgray { border-color: #313164; }
+
+.light-gray { color: #A9B5CE; }
+.bg-light-gray { background-color: #A9B5CE; }
+.border-light-gray { border-color: #A9B5CE; }
