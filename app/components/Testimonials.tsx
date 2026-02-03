@@ -104,8 +104,16 @@ export function Testimonials() {
 
   return (
     <section className="bg-[#01165A] py-20 px-4 lg:px-6 relative overflow-hidden">
-      {/* Linhas decorativas (LinePattern) simuladas no topo/fundo */}
-      <div className="absolute top-0 left-0 w-full h-1 opacity-20 bg-[repeating-linear-gradient(90deg,#6A80B0,6A80B0_2px,transparent_2px,transparent_10px)]"></div>
+      {/* Lines decorativas na parte superior */}
+      <div className="absolute top-0 left-0 w-full">
+        <Image 
+          src="/lines.svg" 
+          alt="" 
+          width={1920} 
+          height={100} 
+          className="w-full h-auto"
+        />
+      </div>
       
       <div className="container mx-auto">
         <div className="text-center mb-16">
@@ -184,6 +192,17 @@ export function Testimonials() {
             />
           ))}
         </div>
+      </div>
+      
+      {/* Linhas verticais decorativas na parte inferior */}
+      <div className="absolute bottom-0 left-0 w-full">
+        <Image 
+          src="/linhas verticais.svg" 
+          alt="" 
+          width={1920} 
+          height={100} 
+          className="w-full h-auto"
+        />
       </div>
     </section>
   )
