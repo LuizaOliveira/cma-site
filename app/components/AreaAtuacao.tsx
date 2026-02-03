@@ -32,7 +32,10 @@ export function AreaAtuacao() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+            onLeave: () => gsap.to(contentRef.current, { opacity: 0, duration: 0.5 }),
+            onEnterBack: () => gsap.to(contentRef.current, { opacity: 1, duration: 0.5 })
           }
         }
       );
@@ -74,18 +77,6 @@ export function AreaAtuacao() {
           }
         }
       );
-
-      // Fade out ao sair
-      gsap.to(contentRef.current, {
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'bottom 70%',
-          end: 'bottom 20%',
-          scrub: 1,
-        }
-      });
     }, sectionRef);
 
     return () => ctx.revert();

@@ -131,7 +131,7 @@ export function Hero() {
                             <div className="flex items-center">
                                 {/* Instagram */}
                                 <a
-                                    href="#"
+                                    href="https://www.instagram.com/clodonilmonteiro/"
                                     aria-label="Instagram"
                                     className="w-5 h-5 sm:w-16 sm:h-16 bg-secondary rounded-full flex items-center justify-center text-white z-10"
                                 >
@@ -140,7 +140,7 @@ export function Hero() {
 
                                 {/* WhatsApp */}
                                 <a
-                                    href="#"
+                                    href="https://www.facebook.com/clodonilmonteiroadvocacia/"
                                     aria-label="WhatsApp"
                                     className="-ml-3 w-5 h-5 sm:w-16 sm:h-16 bg-primary rounded-full flex items-center justify-center text-white"
                                 >
