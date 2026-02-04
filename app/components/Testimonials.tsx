@@ -3,7 +3,11 @@
 import Image from 'next/image'
 import { SectionTitle } from './SectionTitle'
 import { Icon } from '@iconify/react'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { AnimatedTextWithColor } from './AnimatedTextWithColor'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+gsap.registerPlugin(ScrollTrigger)
 
 
 
@@ -77,10 +81,83 @@ const testimonials = [
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const paginationRef = useRef<HTMLDivElement>(null)
   
   // Número de cards por página
   const cardsPerPage = 2
   const totalPages = Math.ceil(testimonials.length / cardsPerPage)
+
+  useEffect(() => {
+    if (!sectionRef.current) return
+
+    const ctx = gsap.context(() => {
+      // Função que executa a animação do header
+      const animateHeader = () => {
+        gsap.fromTo(headerRef.current,
+          { y: -40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.9, ease: 'power2.out' }
+        )
+      }
+
+      // Função que executa a animação dos cards
+      const animateCards = () => {
+        const pages = scrollRef.current?.querySelectorAll('.testimonial-page')
+        pages?.forEach((page, index) => {
+          const cards = page.querySelectorAll('.testimonial-card')
+          
+          cards.forEach((card, cardIndex) => {
+            const fromX = cardIndex === 0 ? -80 : 80
+            
+            gsap.fromTo(card,
+              { x: fromX, opacity: 0 },
+              { 
+                x: 0, 
+                opacity: 1, 
+                duration: 0.9, 
+                ease: 'power2.out',
+                delay: cardIndex * 0.2
+              }
+            )
+          })
+        })
+      }
+
+      // Função que executa a animação da paginação
+      const animatePagination = () => {
+        gsap.fromTo(paginationRef.current,
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }
+        )
+      }
+
+      // Executa animações iniciais
+      animateHeader()
+      animateCards()
+      animatePagination()
+
+      // ScrollTrigger que reinicia as animações ao entrar na seção
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        end: 'bottom 30%',
+        onEnter: () => {
+          animateHeader()
+          animateCards()
+          animatePagination()
+        },
+        onEnterBack: () => {
+          animateHeader()
+          animateCards()
+          animatePagination()
+        },
+      })
+
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -103,7 +180,7 @@ export function Testimonials() {
   }
 
   return (
-    <section className="bg-[#01165A] py-20 px-4 lg:px-6 relative overflow-hidden">
+    <section ref={sectionRef} className="bg-primary py-20 px-4 lg:px-6 relative overflow-hidden ">
       {/* Lines decorativas na parte superior */}
       <div className="absolute top-0 left-0 w-full">
         <Image 
@@ -116,11 +193,14 @@ export function Testimonials() {
       </div>
       
       <div className="container mx-auto">
-        <div className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-16">
           <p className="text-[#A9B5CE] text-sm mb-2 uppercase tracking-widest">— Veja o que dizem sobre a gente</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white">
-            Relatos e <span className="text-[#F97D0E]">Avaliações</span>
-          </h2>
+          <AnimatedTextWithColor
+            text="Relatos e"
+            highlightText="Avaliações"
+            className="text-4xl md:text-5xl font-bold text-white"
+            highlightClassName="text-secondary"
+          />
         </div>
 
         {/* Carousel com scroll horizontal - 2 cards por página */}
@@ -134,14 +214,14 @@ export function Testimonials() {
           {Array.from({ length: totalPages }).map((_, pageIndex) => (
             <div 
               key={pageIndex}
-              className="flex gap-6 flex-shrink-0 w-full snap-start"
+              className="flex gap-6 shrink-0 w-full snap-start testimonial-page justify-center px-4"
             >
               {testimonials
                 .slice(pageIndex * cardsPerPage, (pageIndex + 1) * cardsPerPage)
                 .map((item, index) => (
                   <div 
                     key={index} 
-                    className="bg-[#0F2464] p-8 rounded-xl border border-white/5 relative flex-1 min-w-0 overflow-hidden"
+                    className="bg-[#0F2464] p-8 rounded-xl border border-white/5 relative w-full max-w-170 overflow-hidden testimonial-card min-h-88 flex flex-col justify-between"
                   >
                     {/* Vector decorativo */}
                     <Image 
@@ -154,11 +234,12 @@ export function Testimonials() {
                     
                     <div className="flex gap-1 mb-6">
                       {[...Array(item.stars)].map((_, i) => (
-                        <span key={i} className="text-[#F97D0E] text-xl">★</span>
+                        <Icon key={i} icon="mdi:star" className="text-[#F97D0E] text-xl" />
+                        // <span key={i} className="text-[#F97D0E] text-xl">★</span>
                       ))}
                     </div>
                     
-                    <p className="text-[#A9B5CE] text-lg leading-relaxed mb-8">
+                    <p className="text-[#A9B5CE] text-lg text-justify leading-relaxed mb-8">
                       {item.content}
                     </p>
 
@@ -178,7 +259,7 @@ export function Testimonials() {
         </div>
 
         {/* Paginação dots - uma para cada página (2 cards) */}
-        <div className="flex justify-center gap-3">
+        <div ref={paginationRef} className="flex justify-center gap-3">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}

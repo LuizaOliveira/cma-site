@@ -22,49 +22,63 @@ export function Hero() {
         if (!heroRef.current || !contentRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Animação inicial ao carregar a página
-            const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+            // Função que executa a animação de entrada
+            const playEnterAnimation = () => {
+                const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-            // Badge aparece deslizando da esquerda
-            tl.fromTo(badgeRef.current,
-                { x: -50, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.8 }
-            );
+                // Badge aparece deslizando da esquerda
+                tl.fromTo(badgeRef.current,
+                    { x: -50, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 0.8 }
+                );
 
-            // Título aparece com fade in e slide up
-            tl.fromTo(titleRef.current,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8 },
-                '-=0.5'
-            );
+                // Título aparece com fade in e slide up
+                tl.fromTo(titleRef.current,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8 },
+                    '-=0.5'
+                );
 
-            // Tablet aparece com scale e fade
-            tl.fromTo(tabletRef.current,
-                { scale: 0.9, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 1 },
-                '-=0.6'
-            );
+                // Tablet aparece com scale e fade
+                tl.fromTo(tabletRef.current,
+                    { scale: 0.9, opacity: 0 },
+                    { scale: 1, opacity: 1, duration: 1 },
+                    '-=0.6'
+                );
 
-            // Redes sociais aparecem da direita
-            tl.fromTo(socialRef.current,
-                { x: 50, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.8 },
-                '-=0.7'
-            );
+                // Redes sociais aparecem da direita
+                tl.fromTo(socialRef.current,
+                    { x: 50, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 0.8 },
+                    '-=0.7'
+                );
 
-            // Texto descritivo fade in
-            tl.fromTo(textRef.current,
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8 },
-                '-=0.6'
-            );
+                // Texto descritivo fade in
+                tl.fromTo(textRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8 },
+                    '-=0.6'
+                );
 
-            // Botões aparecem com fade in simples
-            tl.fromTo(buttonsRef.current,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.8 },
-                '-=0.5'
-            );
+                // Botões aparecem com fade in simples
+                tl.fromTo(buttonsRef.current,
+                    { opacity: 0 },
+                    { opacity: 1, duration: 0.8 },
+                    '-=0.5'
+                );
+            };
+
+            // Executa a animação inicial
+            playEnterAnimation();
+
+            // ScrollTrigger que detecta quando volta para a seção
+            ScrollTrigger.create({
+                trigger: heroRef.current,
+                start: 'top 80%',
+                end: 'bottom 20%',
+                onEnter: () => playEnterAnimation(),
+                onEnterBack: () => playEnterAnimation(), // Quando volta rolando para cima
+            });
 
             // Fade out suave apenas no conteúdo quando está saindo da tela
             gsap.to(contentRef.current, {

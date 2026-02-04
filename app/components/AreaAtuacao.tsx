@@ -91,7 +91,7 @@ export function AreaAtuacao() {
         {/* </AnimatedSection> */}
 
         {/* Primeira linha - Principal público */}
-        <div ref={card1Ref} className="bg-[#0f2a63] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-left">
+        <div ref={card1Ref} className="bg-[#0F2464] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-left">
           <div className="order-2 md:order-1">
             {/* Imagem do escritório */}
             <div className="relative">
@@ -138,7 +138,7 @@ export function AreaAtuacao() {
         </div>
 
         {/* Segunda linha - Advocacia para servidores públicos */}
-        <div ref={card2Ref} className="bg-[#0f2a63] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-right">
+        <div ref={card2Ref} className="bg-[#0F2464] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-right">
           <div className="space-y-4 sm:space-y-6 text-white order-1 md:order-1 px-2 sm:px-6 lg:px-10 my-2 sm:my-4 text-center md:text-left">
             <div className='flex gap-3 justify-center md:justify-start'>
               <div className='h-6 sm:h-8 w-1 bg-secondary'></div>

@@ -11,8 +11,8 @@ export function Header() {
     { href: '/', label: 'Início' },
     { href: '#area-atuacao', label: 'Área de atuação' },
     { href: '#equipe', label: 'Equipe' },
+    { href: '/news', label: 'Notícias' },
     { href: '#contato', label: 'Contato' },
-    { href: '#noticias', label: 'Notícias' },
   ];
 
   return (
