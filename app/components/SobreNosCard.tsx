@@ -9,7 +9,7 @@ interface SobreNosCardProps {
 export function SobreNosCard({ titulo, icone, texto }: SobreNosCardProps) {
   return (
     <div className="flex items-center">
-      <div className="flex items-center border border-text-color shadow-text-color shadow-2xl rounded-lg w-70">
+      <div className="flex items-center border border-text-color shadow-text-color shadow-2xl rounded-lg w-70 bg-white">
           <span className="bg-secondary h-20 w-1 rounded-r-full" />
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">

@@ -13,8 +13,8 @@ export function SobreNos() {
         </div>
         <div className="grid grid-cols-12 mt-8 px-4">
           <div className="col-span-6">
-            <h2 className="text-primary text-5xl font-bold">Tradição, compromisso <br /> <span className="text-secondary">e excelência jurídica</span></h2>
-            <p className="text-[#6A80B0] mt-4 text-justify">Somos um escritório que pratica a advocacia com visão estratégica e inovação para que os nossos resultados apresentem sempre melhoria contínua em todos os âmbitos desde os processos operacionais aos gerenciais. Com foco em resultados, desenvolvemos soluções customizadas para os servidores públicos, com ênfase nos servidores da educação</p>
+            <h2 className="text-primary text-5xl font-bold mb-8">Tradição, compromisso <br /> <span className="text-secondary">e excelência jurídica</span></h2>
+            <p className="text-[#6A80B0] mt-4 text-justify leading-loose text-lg">Somos um escritório que pratica a advocacia com visão estratégica e inovação para que os nossos resultados apresentem sempre melhoria contínua em todos os âmbitos desde os processos operacionais aos gerenciais. Com foco em resultados, desenvolvemos soluções customizadas para os servidores públicos, com ênfase nos servidores da educação</p>
             <div className='text-[#6A80B0] flex items-center mt-6'>
               <Icon icon="lets-icons:check-fill" className="inline-block text-secondary w-9 h-9 mr-2" />
               Professores Ativos e Aposentados

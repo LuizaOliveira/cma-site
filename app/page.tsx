@@ -3,6 +3,7 @@ import { Hero } from './components/Hero';
 import { AreaAtuacao } from './components/AreaAtuacao';
 import { Footer } from './components/Footer';
 import { SobreNos } from './components/SobreNos';
+import { NossaEquipe } from './components/NossaEquipe';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <Hero />
       <AreaAtuacao />
       <SobreNos />
+      <NossaEquipe />
       <Footer />
     </main>
   );
