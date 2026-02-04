@@ -13,7 +13,18 @@ const locations = [
 
 export function Contact() {
   return (
-    <section className="bg-[#F8F9FC] py-20 px-4 lg:px-6">
+    <section className="bg-[#F8F9FC] py-20 px-4 lg:px-6 relative overflow-hidden">
+      {/* Logo caixa no canto inferior direito */}
+      <div className="absolute bottom-7 right-4 z-10">
+        <Image 
+          src="/logo_caixa.svg" 
+          alt="Logo" 
+          width={300} 
+          height={300} 
+          className="w-auto h-auto"
+        />
+      </div>
+      
       <div className="container mx-auto">
         {/* Header Contato */}
         <div className="text-center mb-16">
