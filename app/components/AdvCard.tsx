@@ -21,7 +21,7 @@ export function AdvCard({ imgSrc, nome, titulo, texto }: AdvCardProps) {
           />
           <div className="flex">
             <div className="text-white bg-primary p-2 w-full text-sm md:text-base">
-              {<span className="underline underline-offset-1 decoration-2 decoration-secondary md:text-base sm:text-2xl">{nome.split(' ')[0]}</span>}
+              {<span className="underline underline-offset-4 decoration-2 decoration-secondary md:text-base sm:text-2xl">{nome.split(' ')[0]}</span>}
               {<span className="md:text-base sm:text-2xl"> {nome.split(' ')[1]}</span>}
               {/* <div className="bg-secondary py-[1px] w-12 -mt-1" /> */}
             </div>
