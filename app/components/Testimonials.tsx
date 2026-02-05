@@ -193,7 +193,7 @@ export function Testimonials() {
       </div>
       
       <div className="container mx-auto">
-        <div ref={headerRef} className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-16 py-10 lg:py-0">
           <p className="text-[#A9B5CE] text-sm mb-2 uppercase tracking-widest">— Veja o que dizem sobre a gente</p>
           <AnimatedTextWithColor
             text="Relatos e"
@@ -221,7 +221,7 @@ export function Testimonials() {
                 .map((item, index) => (
                   <div 
                     key={index} 
-                    className="bg-[#0F2464] p-8 rounded-xl border border-white/5 relative w-full max-w-170 overflow-hidden testimonial-card min-h-88 flex flex-col justify-between"
+                    className="bg-secondary-blue p-8 rounded-xl border border-white/5 relative w-full max-w-170 overflow-hidden testimonial-card min-h-96 flex flex-col justify-between"
                   >
                     {/* Vector decorativo */}
                     <Image 
@@ -234,8 +234,7 @@ export function Testimonials() {
                     
                     <div className="flex gap-1 mb-6">
                       {[...Array(item.stars)].map((_, i) => (
-                        <Icon key={i} icon="mdi:star" className="text-[#F97D0E] text-xl" />
-                        // <span key={i} className="text-[#F97D0E] text-xl">★</span>
+                        <Icon key={i} icon="mdi:star" className="text-secondary text-xl" />
                       ))}
                     </div>
                     
@@ -259,7 +258,7 @@ export function Testimonials() {
         </div>
 
         {/* Paginação dots - uma para cada página (2 cards) */}
-        <div ref={paginationRef} className="flex justify-center gap-3">
+        <div ref={paginationRef} className="flex justify-center gap-3 py-14">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}

@@ -3,6 +3,11 @@
 import { Icon } from '@iconify/react'
 import { Button } from './Button'
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const locations = [
   { state: "Rio grande do norte", phone: "(84) 3334-2179" },
@@ -12,11 +17,106 @@ const locations = [
 ]
 
 export function Contact() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const locationsRef = useRef<HTMLDivElement>(null);
+  const leftSideRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Animação do header
+      gsap.fromTo(headerRef.current,
+        { 
+          opacity: 0,
+          y: 50
+        },
+        {
+          opacity: 1,
+          y: 0,
+          ease: 'power2.out',
+          duration: 1,
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+
+      // Animação dos cards de localização
+      if (locationsRef.current?.children) {
+        gsap.fromTo([...locationsRef.current.children],
+          { 
+            opacity: 0,
+            y: 40,
+            scale: 0.95
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            ease: 'power2.out',
+            duration: 0.8,
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: locationsRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      }
+
+      // Animação do lado esquerdo (texto e imagem)
+      gsap.fromTo(leftSideRef.current,
+        { 
+          opacity: 0,
+          x: -60
+        },
+        {
+          opacity: 1,
+          x: 0,
+          ease: 'power2.out',
+          duration: 1.2,
+          scrollTrigger: {
+            trigger: leftSideRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+
+      // Animação do formulário
+      gsap.fromTo(formRef.current,
+        { 
+          opacity: 0,
+          x: 60
+        },
+        {
+          opacity: 1,
+          x: 0,
+          ease: 'power2.out',
+          duration: 1.2,
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-[#F8F9FC] py-20 px-4 lg:px-6">
+    <section ref={sectionRef} className="bg-[#F8F9FC] py-20 px-4 lg:px-6">
       <div className="container mx-auto">
         {/* Header Contato */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-16">
           <p className="text-[#313164] font-medium mb-2">Precisa de ajuda?</p>
           <h2 className="text-4xl font-bold text-[#01165A]">
             Entre em <span className="text-[#F97D0E]">contato conosco</span>
@@ -24,7 +124,7 @@ export function Contact() {
         </div>
 
         {/* Cards de Localização */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
+        <div ref={locationsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
           {locations.map((loc, i) => (
             <div 
               key={i} 
@@ -41,7 +141,7 @@ export function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Lado Esquerdo: Texto e Ilustração */}
-          <div>
+          <div ref={leftSideRef}>
             <h3 className="text-3xl font-bold text-[#01165A] leading-tight mb-8">
               Marque o que precisa e receba uma <span className="text-[#F97D0E]">análise gratuita do seu caso.</span>
             </h3>
@@ -51,7 +151,7 @@ export function Contact() {
           </div>
 
           {/* Lado Direito: Formulário Checklist */}
-          <div className="space-y-8">
+          <div ref={formRef} className="space-y-8">
             <div className="flex gap-8 items-center">
               <span className="text-[#6A80B0] font-semibold">Tipo de profissional</span>
               <label className="flex items-center gap-2 cursor-pointer">

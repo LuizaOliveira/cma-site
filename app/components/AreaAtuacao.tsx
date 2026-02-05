@@ -20,7 +20,7 @@ export function AreaAtuacao() {
     const ctx = gsap.context(() => {
       // Fade in com movimento up ao entrar - conteúdo geral
       gsap.fromTo(contentRef.current,
-        { 
+        {
           opacity: 0,
           y: 60
         },
@@ -42,7 +42,7 @@ export function AreaAtuacao() {
 
       // Animação individual do primeiro card
       gsap.fromTo(card1Ref.current,
-        { 
+        {
           opacity: 0,
           y: 40
         },
@@ -61,7 +61,7 @@ export function AreaAtuacao() {
 
       // Animação individual do segundo card
       gsap.fromTo(card2Ref.current,
-        { 
+        {
           opacity: 0,
           y: 40
         },
@@ -91,21 +91,28 @@ export function AreaAtuacao() {
         {/* </AnimatedSection> */}
 
         {/* Primeira linha - Principal público */}
-        <div ref={card1Ref} className="bg-[#0F2464] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-left">
-          <div className="order-2 md:order-1">
-            {/* Imagem do escritório */}
-            <div className="relative">
-              <div className="rounded-lg overflow-hidden shadow-2xl">
-                <Image
-                  src="/office-meeting.svg"
-                  alt="Escritório de advocacia - sala de reuniões"
-                  width={600}
-                  height={450}
-                  className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-[28rem] object-cover rounded-lg clip-path-corner-left"
-                />
-              </div>
+        <div
+          ref={card1Ref}
+          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5"
+          style={{ clipPath: "polygon(40px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 40px)" }}
+        >
+          {/* <div className="order-2 md:order-1"> */}
+          {/* Imagem do escritório */}
+          <div className="relative">
+            <div className="rounded-lg overflow-hidden shadow-2xl">
+              <Image
+                src="/office-meeting.svg"
+                alt="Escritório de advocacia - sala de reuniões"
+                width={600}
+                height={450}
+                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg"
+                style={{ clipPath: "polygon(40px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 40px)" }}
+              />
+              {/* </div> */}
             </div>
           </div>
+
+
 
           {/* Conteúdo Principal público */}
           <div className="space-y-4 sm:space-y-6 text-white order-1 md:order-2 text-center md:text-left">
@@ -138,7 +145,11 @@ export function AreaAtuacao() {
         </div>
 
         {/* Segunda linha - Advocacia para servidores públicos */}
-        <div ref={card2Ref} className="bg-[#0F2464] rounded-lg grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-8 py-6 lg:py-8 clip-path-corner-right">
+        <div
+          ref={card1Ref}
+          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5"
+          style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)"}}
+        >
           <div className="space-y-4 sm:space-y-6 text-white order-1 md:order-1 px-2 sm:px-6 lg:px-10 my-2 sm:my-4 text-center md:text-left">
             <div className='flex gap-3 justify-center md:justify-start'>
               <div className='h-6 sm:h-8 w-1 bg-secondary'></div>
@@ -147,11 +158,11 @@ export function AreaAtuacao() {
               </h3>
             </div>
             <p className="text-sm sm:text-base lg:text-lg leading-relaxed text-ligth-gray text-justify">
-              O núcleo do Direito Administrativo direciona sua atuação e sua atenção nos direitos dos Servidores Públicos 
-              através de assessoria e consultoria jurídica com o escopo de esclarecer direitos, analisar documentos e processos 
-              de forma a estabelecer a melhor solução para cada pleito, uma vez que é necessário a discussão da legalidade e/ou 
-              constitucionalidade do direito e obrigações por meio da interpretação de novas normas e jurisprudência, sejam elas 
-              decorrentes da falta de cumprimento dos direitos da Administração Pública, sejam em razão de erros materiais ou de 
+              O núcleo do Direito Administrativo direciona sua atuação e sua atenção nos direitos dos Servidores Públicos
+              através de assessoria e consultoria jurídica com o escopo de esclarecer direitos, analisar documentos e processos
+              de forma a estabelecer a melhor solução para cada pleito, uma vez que é necessário a discussão da legalidade e/ou
+              constitucionalidade do direito e obrigações por meio da interpretação de novas normas e jurisprudência, sejam elas
+              decorrentes da falta de cumprimento dos direitos da Administração Pública, sejam em razão de erros materiais ou de
               interpretação pacificadas pelos tribunais.
             </p>
           </div>
@@ -164,7 +175,8 @@ export function AreaAtuacao() {
                 alt="Equipe de advocacia trabalhando"
                 width={500}
                 height={400}
-                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-[28rem] object-cover rounded-lg clip-path-corner-right"
+                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg clip-path-corner-right"
+                style={{    clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)"}}
               />
             </div>
           </div>
@@ -177,9 +189,9 @@ export function AreaAtuacao() {
             <span className="text-lg sm:text-xl lg:text-2xl font-semibold">Dúvidas? </span>
             <span className="text-lg sm:text-xl lg:text-2xl text-secondary">Entre em contato conosco</span>
           </div>
-          <a 
-            href="https://wa.me/558433342179" 
-            target="_blank" 
+          <a
+            href="https://wa.me/558433342179"
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-secondary hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl"
           >

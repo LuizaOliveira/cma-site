@@ -8,11 +8,11 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
-    { href: '/', label: 'Início' },
-    { href: '#area-atuacao', label: 'Área de atuação' },
-    { href: '#equipe', label: 'Equipe' },
+    { href: '/hero', label: 'Início' },
+    { href: '/area-atuacao', label: 'Área de atuação' },
+    { href: '/equipe', label: 'Equipe' },
     { href: '/news', label: 'Notícias' },
-    { href: '#contato', label: 'Contato' },
+    { href: '/contato', label: 'Contato' },
   ];
 
   return (
