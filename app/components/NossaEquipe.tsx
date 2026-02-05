@@ -3,6 +3,9 @@ import equipe from "../../equipe.png";
 import { AdvCard } from "./AdvCard";
 
 export function NossaEquipe() {
+
+  const loremIpsum = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy."
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto">
@@ -39,19 +42,19 @@ export function NossaEquipe() {
             <p className="text-[#6A80B0] text-justify leading-loose text-lg">Nossa equipe é formada por profissionais experientes em diferentes áreas, os quais trabalham de forma integrada e usam habilidades técnicas e talentos coordenados ligados a casos rotineiros direcionados aos litígios de Servidores Públicos.</p>
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <h2 className="text-primary text-5xl font-bold mb-10">
+        <div className="flex items-center justify-between mb-10">
+          <h2 className="text-primary text-5xl font-bold">
             Advogados fundadores <span className="text-secondary"><br /> e Sócios</span>
           </h2>
           <div className="flex gap-3">
-            <div className="rounded-full bg-secondary px-4">Ver toda equipe</div>
-            <div className="rounded-full bg-primary w-10 h-10"> {">"} </div>
+            <div className="rounded-full bg-secondary px-4 flex items-center justify-center font-bold">Ver toda equipe</div>
+            <div className="rounded-full bg-primary w-10 h-10 flex items-center justify-center"> {">"} </div>
           </div>
         </div>
-        <AdvCard />
-        <AdvCard />
-        <AdvCard />
-        <AdvCard />
+        <AdvCard imgSrc="clodonilBG.png" nome="Clodonil Monteiro" titulo="Fundador" texto={loremIpsum} />
+        <AdvCard imgSrc="edjaneBG.png" nome="Edjane Lucena" titulo="Fundadora" texto={loremIpsum} />
+        <AdvCard imgSrc="lauraBG.png" nome="Laura Maria" titulo="Sócia" texto={loremIpsum} />
+        <AdvCard imgSrc="diegoBG.png" nome="Diego Medeiros" titulo="Sócio" texto={loremIpsum} />
       </div>
     </section>
   );
