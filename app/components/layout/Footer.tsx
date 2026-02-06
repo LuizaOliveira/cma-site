@@ -1,4 +1,4 @@
-import { Icons } from './Button';
+import { Icons } from '../ui/Button';
 import Image from 'next/image';
 
 export function Footer() {

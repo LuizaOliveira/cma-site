@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
-import { NewsletterSubscription } from './NewsletterSubscription';
-import { RelatedArticles } from './RelatedArticles';
+
 
 const categories = [
   'Todas as categorias',
@@ -170,10 +169,10 @@ export function NewsFilter() {
       </motion.div>
       
       {/* Related Articles */}
-      <RelatedArticles />
+      {/* <RelatedArticles /> */}
       
       {/* Newsletter Subscription */}
-      <NewsletterSubscription />
+      {/* <NewsletterSubscription /> */}
     </div>
   );
 }

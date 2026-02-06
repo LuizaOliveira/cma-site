@@ -1,11 +1,13 @@
 'use client'
 
 import { Icon } from '@iconify/react'
-import { Button } from './Button'
+import { Button } from '../ui/Button'
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { DURATIONS, EASINGS, STAGGER } from '../../lib/animations/constants'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,98 +24,137 @@ export function Contact() {
   const locationsRef = useRef<HTMLDivElement>(null);
   const leftSideRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animação do header
-      gsap.fromTo(headerRef.current,
-        { 
-          opacity: 0,
-          y: 50
-        },
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 1,
-          scrollTrigger: {
-            trigger: headerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
+      const animDuration = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slowest;
+      const shouldAnimate = !prefersReducedMotion;
 
-      // Animação dos cards de localização
-      if (locationsRef.current?.children) {
-        gsap.fromTo([...locationsRef.current.children],
-          { 
-            opacity: 0,
-            y: 40,
-            scale: 0.95
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            ease: 'power2.out',
-            duration: 0.8,
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: locationsRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            }
-          }
+      // Funções de animação do header
+      const animateHeaderIn = () => {
+        gsap.fromTo(headerRef.current,
+          { opacity: 0, y: shouldAnimate ? 50 : 0 },
+          { opacity: 1, y: 0, ease: EASINGS.easeOut, duration: animDuration }
         );
-      }
+      };
 
-      // Animação do lado esquerdo (texto e imagem)
-      gsap.fromTo(leftSideRef.current,
-        { 
-          opacity: 0,
-          x: -60
-        },
-        {
-          opacity: 1,
-          x: 0,
-          ease: 'power2.out',
-          duration: 1.2,
-          scrollTrigger: {
-            trigger: leftSideRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
+      const animateHeaderOut = () => {
+        if (prefersReducedMotion) {
+          gsap.to(headerRef.current, { opacity: 0, duration: DURATIONS.instant });
+          return;
         }
-      );
+        gsap.to(headerRef.current, { opacity: 0, y: -50, ease: EASINGS.easeIn, duration: DURATIONS.slow });
+      };
 
-      // Animação do formulário
-      gsap.fromTo(formRef.current,
-        { 
-          opacity: 0,
-          x: 60
-        },
-        {
-          opacity: 1,
-          x: 0,
-          ease: 'power2.out',
-          duration: 1.2,
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
+      // Funções de animação dos cards de localização
+      const animateLocationsIn = () => {
+        if (locationsRef.current?.children) {
+          gsap.fromTo([...locationsRef.current.children],
+            { opacity: 0, y: shouldAnimate ? 40 : 0, scale: shouldAnimate ? 0.95 : 1 },
+            { opacity: 1, y: 0, scale: 1, ease: EASINGS.easeOut, duration: prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower, stagger: prefersReducedMotion ? 0 : STAGGER.normal }
+          );
         }
-      );
+      };
+
+      const animateLocationsOut = () => {
+        if (locationsRef.current?.children) {
+          if (prefersReducedMotion) {
+            gsap.to([...locationsRef.current.children], { opacity: 0, duration: DURATIONS.instant });
+            return;
+          }
+          gsap.to([...locationsRef.current.children], { opacity: 0, y: -40, scale: 0.95, ease: EASINGS.easeIn, duration: DURATIONS.slow, stagger: STAGGER.fast });
+        }
+      };
+
+      // Funções de animação do lado esquerdo
+      const animateLeftSideIn = () => {
+        gsap.fromTo(leftSideRef.current,
+          { opacity: 0, x: shouldAnimate ? -60 : 0 },
+          { opacity: 1, x: 0, ease: EASINGS.easeOut, duration: animDuration }
+        );
+      };
+
+      const animateLeftSideOut = () => {
+        if (prefersReducedMotion) {
+          gsap.to(leftSideRef.current, { opacity: 0, duration: DURATIONS.instant });
+          return;
+        }
+        gsap.to(leftSideRef.current, { opacity: 0, x: -60, ease: EASINGS.easeIn, duration: DURATIONS.slow });
+      };
+
+      // Funções de animação do formulário
+      const animateFormIn = () => {
+        gsap.fromTo(formRef.current,
+          { opacity: 0, x: shouldAnimate ? 60 : 0 },
+          { opacity: 1, x: 0, ease: EASINGS.easeOut, duration: animDuration }
+        );
+      };
+
+      const animateFormOut = () => {
+        if (prefersReducedMotion) {
+          gsap.to(formRef.current, { opacity: 0, duration: DURATIONS.instant });
+          return;
+        }
+        gsap.to(formRef.current, { opacity: 0, x: 60, ease: EASINGS.easeIn, duration: DURATIONS.slow });
+      };
+
+      // ScrollTriggers
+      ScrollTrigger.create({
+        trigger: headerRef.current,
+        start: 'top 80%',
+        onEnter: animateHeaderIn,
+        onLeave: animateHeaderOut,
+        onEnterBack: animateHeaderIn,
+        onLeaveBack: animateHeaderOut,
+      });
+
+      ScrollTrigger.create({
+        trigger: locationsRef.current,
+        start: 'top 85%',
+        onEnter: animateLocationsIn,
+        onLeave: animateLocationsOut,
+        onEnterBack: animateLocationsIn,
+        onLeaveBack: animateLocationsOut,
+      });
+
+      ScrollTrigger.create({
+        trigger: leftSideRef.current,
+        start: 'top 80%',
+        onEnter: animateLeftSideIn,
+        onLeave: animateLeftSideOut,
+        onEnterBack: animateLeftSideIn,
+        onLeaveBack: animateLeftSideOut,
+      });
+
+      ScrollTrigger.create({
+        trigger: formRef.current,
+        start: 'top 80%',
+        onEnter: animateFormIn,
+        onLeave: animateFormOut,
+        onEnterBack: animateFormIn,
+        onLeaveBack: animateFormOut,
+      });
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
-    <section ref={sectionRef} className="bg-[#F8F9FC] py-20 px-4 lg:px-6">
+    <section id="contato" className="bg-[#F8F9FC] py-20 px-4 lg:px-6 relative overflow-hidden">
+      {/* Logo caixa no canto inferior direito */}
+      <div className="absolute bottom-7 right-4 z-10">
+        <Image
+          src="/logo_caixa.svg"
+          alt="Logo"
+          width={300}
+          height={300}
+          className="w-auto h-auto"
+        />
+      </div>
+
       <div className="container mx-auto">
         {/* Header Contato */}
         <div ref={headerRef} className="text-center mb-16">
@@ -126,8 +167,8 @@ export function Contact() {
         {/* Cards de Localização */}
         <div ref={locationsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
           {locations.map((loc, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="p-6 rounded-lg flex justify-between items-center cursor-pointer transition-all duration-300 bg-[#E9EEF7] text-[#313164] hover:bg-[#01165A] hover:text-white"
             >
               <div>
@@ -164,7 +205,7 @@ export function Contact() {
               </label>
             </div>
 
-            <div className="bg-gradient-to-b from-[#0F2464] to-[#273C7D] rounded-2xl p-8 text-white grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+            <div className="bg-linear-to-b from-[#0F2464] to-[#273C7D] rounded-2xl p-8 text-white grid grid-cols-1 md:grid-cols-2 gap-8 relative">
               <div>
                 <h4 className="font-bold mb-4 border-b border-white/10 pb-2">Ativos</h4>
                 <div className="space-y-3">
@@ -187,7 +228,7 @@ export function Contact() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="md:col-span-2 flex justify-end mt-4">
                 <Button variant="secondary" className="px-10 py-3 flex items-center gap-2">
                   <span>Enviar</span>

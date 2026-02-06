@@ -1,12 +1,15 @@
 'use client'
 
 import Image from 'next/image'
-import { SectionTitle } from './SectionTitle'
+import { SectionTitle } from '../ui/SectionTitle'
 import { Icon } from '@iconify/react'
 import { useState, useRef, useEffect } from 'react'
-import { AnimatedTextWithColor } from './AnimatedTextWithColor'
+import { AnimatedTextWithColor } from '../animated/AnimatedTextWithColor'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { DURATIONS, EASINGS } from '../../lib/animations/constants'
+
 gsap.registerPlugin(ScrollTrigger)
 
 
@@ -84,7 +87,8 @@ export function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const paginationRef = useRef<HTMLDivElement>(null)
-  
+  const prefersReducedMotion = useReducedMotion()
+
   // Número de cards por página
   const cardsPerPage = 2
   const totalPages = Math.ceil(testimonials.length / cardsPerPage)
@@ -93,49 +97,96 @@ export function Testimonials() {
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
-      // Função que executa a animação do header
-      const animateHeader = () => {
+      const animDuration = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower
+      const shouldAnimate = !prefersReducedMotion
+
+      // Função que executa a animação do header - ENTRADA
+      const animateHeaderIn = () => {
         gsap.fromTo(headerRef.current,
-          { y: -40, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9, ease: 'power2.out' }
+          { y: shouldAnimate ? -40 : 0, opacity: 0 },
+          { y: 0, opacity: 1, duration: animDuration, ease: EASINGS.easeOut }
         )
       }
 
-      // Função que executa a animação dos cards
-      const animateCards = () => {
+      // Função que executa a animação do header - SAÍDA
+      const animateHeaderOut = () => {
+        if (prefersReducedMotion) {
+          gsap.to(headerRef.current, { opacity: 0, duration: DURATIONS.instant })
+          return
+        }
+        gsap.to(headerRef.current, { y: 40, opacity: 0, duration: DURATIONS.slow, ease: EASINGS.easeIn })
+      }
+
+      // Função que executa a animação dos cards - ENTRADA
+      const animateCardsIn = () => {
         const pages = scrollRef.current?.querySelectorAll('.testimonial-page')
         pages?.forEach((page, index) => {
           const cards = page.querySelectorAll('.testimonial-card')
-          
+
           cards.forEach((card, cardIndex) => {
-            const fromX = cardIndex === 0 ? -80 : 80
-            
+            const fromX = shouldAnimate ? (cardIndex === 0 ? -80 : 80) : 0
+
             gsap.fromTo(card,
               { x: fromX, opacity: 0 },
-              { 
-                x: 0, 
-                opacity: 1, 
-                duration: 0.9, 
-                ease: 'power2.out',
-                delay: cardIndex * 0.2
+              {
+                x: 0,
+                opacity: 1,
+                duration: animDuration,
+                ease: EASINGS.easeOut,
+                delay: prefersReducedMotion ? 0 : cardIndex * 0.2
               }
             )
           })
         })
       }
 
-      // Função que executa a animação da paginação
-      const animatePagination = () => {
+      // Função que executa a animação dos cards - SAÍDA
+      const animateCardsOut = () => {
+        const pages = scrollRef.current?.querySelectorAll('.testimonial-page')
+        if (prefersReducedMotion) {
+          pages?.forEach(page => {
+            const cards = page.querySelectorAll('.testimonial-card')
+            cards.forEach(card => gsap.to(card, { opacity: 0, duration: DURATIONS.instant }))
+          })
+          return
+        }
+
+        pages?.forEach((page, index) => {
+          const cards = page.querySelectorAll('.testimonial-card')
+          cards.forEach((card, cardIndex) => {
+            const toX = cardIndex === 0 ? 80 : -80
+            gsap.to(card, {
+              x: toX,
+              opacity: 0,
+              duration: DURATIONS.slow,
+              ease: EASINGS.easeIn,
+              delay: cardIndex * 0.1
+            })
+          })
+        })
+      }
+
+      // Função que executa a animação da paginação - ENTRADA
+      const animatePaginationIn = () => {
         gsap.fromTo(paginationRef.current,
-          { y: 25, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }
+          { y: shouldAnimate ? 25 : 0, opacity: 0 },
+          { y: 0, opacity: 1, duration: prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower, ease: EASINGS.easeOut }
         )
       }
 
+      // Função que executa a animação da paginação - SAÍDA
+      const animatePaginationOut = () => {
+        if (prefersReducedMotion) {
+          gsap.to(paginationRef.current, { opacity: 0, duration: DURATIONS.instant })
+          return
+        }
+        gsap.to(paginationRef.current, { y: -25, opacity: 0, duration: DURATIONS.slow, ease: EASINGS.easeIn })
+      }
+
       // Executa animações iniciais
-      animateHeader()
-      animateCards()
-      animatePagination()
+      animateHeaderIn()
+      animateCardsIn()
+      animatePaginationIn()
 
       // ScrollTrigger que reinicia as animações ao entrar na seção
       ScrollTrigger.create({
@@ -143,21 +194,31 @@ export function Testimonials() {
         start: 'top 70%',
         end: 'bottom 30%',
         onEnter: () => {
-          animateHeader()
-          animateCards()
-          animatePagination()
+          animateHeaderIn()
+          animateCardsIn()
+          animatePaginationIn()
+        },
+        onLeave: () => {
+          animateHeaderOut()
+          animateCardsOut()
+          animatePaginationOut()
         },
         onEnterBack: () => {
-          animateHeader()
-          animateCards()
-          animatePagination()
+          animateHeaderIn()
+          animateCardsIn()
+          animatePaginationIn()
+        },
+        onLeaveBack: () => {
+          animateHeaderOut()
+          animateCardsOut()
+          animatePaginationOut()
         },
       })
 
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [prefersReducedMotion])
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -182,29 +243,23 @@ export function Testimonials() {
   return (
     <section ref={sectionRef} className="bg-primary py-20 px-4 lg:px-6 relative overflow-hidden ">
       {/* Lines decorativas na parte superior */}
-      <div className="absolute top-0 left-0 w-full">
-        <Image 
-          src="/lines.svg" 
-          alt="" 
-          width={1920} 
-          height={100} 
+      <div className="absolute top-0 left-0 w-full mt-9">
+        <Image
+          src="/lines.svg"
+          alt=""
+          width={1920}
+          height={100}
           className="w-full h-auto"
         />
       </div>
-      
+
       <div className="container mx-auto">
-        <div ref={headerRef} className="text-center mb-16 py-10 lg:py-0">
-          <p className="text-[#A9B5CE] text-sm mb-2 uppercase tracking-widest">— Veja o que dizem sobre a gente</p>
-          <AnimatedTextWithColor
-            text="Relatos e"
-            highlightText="Avaliações"
-            className="text-4xl md:text-5xl font-bold text-white"
-            highlightClassName="text-secondary"
-          />
+        <div ref={headerRef} className="py-10">
+          <SectionTitle title='Relatos e' subtitle='Veja o que dizem sobre a gente' center dark>Avaliações</SectionTitle>
         </div>
 
         {/* Carousel com scroll horizontal - 2 cards por página */}
-        <div 
+        <div
           ref={scrollRef}
           onScroll={handleScroll}
           className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 mb-12"
@@ -212,32 +267,32 @@ export function Testimonials() {
         >
           {/* Agrupa os cards em páginas de 2 */}
           {Array.from({ length: totalPages }).map((_, pageIndex) => (
-            <div 
+            <div
               key={pageIndex}
               className="flex gap-6 shrink-0 w-full snap-start testimonial-page justify-center px-4"
             >
               {testimonials
                 .slice(pageIndex * cardsPerPage, (pageIndex + 1) * cardsPerPage)
                 .map((item, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className="bg-secondary-blue p-8 rounded-xl border border-white/5 relative w-full max-w-170 overflow-hidden testimonial-card min-h-96 flex flex-col justify-between"
                   >
                     {/* Vector decorativo */}
-                    <Image 
-                      src="/vector.svg" 
-                      alt="" 
-                      width={150} 
-                      height={150} 
+                    <Image
+                      src="/vector.svg"
+                      alt=""
+                      width={150}
+                      height={150}
                       className="absolute top-4 right-8 opacity-40 pointer-events-none"
                     />
-                    
+
                     <div className="flex gap-1 mb-6">
                       {[...Array(item.stars)].map((_, i) => (
                         <Icon key={i} icon="mdi:star" className="text-secondary text-xl" />
                       ))}
                     </div>
-                    
+
                     <p className="text-[#A9B5CE] text-lg text-justify leading-relaxed mb-8">
                       {item.content}
                     </p>
@@ -263,26 +318,28 @@ export function Testimonials() {
             <button
               key={index}
               onClick={() => scrollToIndex(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                activeIndex === index 
-                  ? 'w-8 bg-[#F97D0E]' 
-                  : 'w-8 bg-[#313164] hover:bg-[#4a4a8a]'
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
+                ? 'w-8 bg-[#F97D0E]'
+                : 'w-8 bg-[#313164] hover:bg-[#4a4a8a]'
+                }`}
               aria-label={`Ir para página ${index + 1}`}
             />
           ))}
         </div>
       </div>
-      
+
       {/* Linhas verticais decorativas na parte inferior */}
+      <div className='relative overflow-hidden'>
       <div className="absolute bottom-0 left-0 w-full">
-        <Image 
-          src="/linhas verticais.svg" 
-          alt="" 
-          width={1920} 
-          height={100} 
+        <Image
+          src="/linhas verticais.svg"
+          alt=""
+          width={1920}
+          height={100}
           className="w-full h-auto"
         />
+      </div>
+
       </div>
     </section>
   )

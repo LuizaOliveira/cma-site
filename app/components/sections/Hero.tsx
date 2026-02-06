@@ -1,10 +1,12 @@
 "use client"
 import { useEffect, useRef } from 'react';
-import { Button, Icons } from './Button';
-import { AnimatedTablet } from './AnimatedTablet';
+import { Button, Icons } from '../ui/Button';
+import { AnimatedTablet } from '../animated/AnimatedTablet';
 import { Icon } from '@iconify/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { DURATIONS, EASINGS } from '../../lib/animations/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,55 +19,81 @@ export function Hero() {
     const socialRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
     const buttonsRef = useRef<HTMLDivElement>(null);
+    const prefersReducedMotion = useReducedMotion();
 
     useEffect(() => {
         if (!heroRef.current || !contentRef.current) return;
 
         const ctx = gsap.context(() => {
+            // Se o usuário prefere movimento reduzido, apenas fade
+            const animationDuration = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower;
+            const shouldAnimate = !prefersReducedMotion;
+
             // Função que executa a animação de entrada
             const playEnterAnimation = () => {
-                const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+                const tl = gsap.timeline({ defaults: { ease: EASINGS.easeOut } });
 
                 // Badge aparece deslizando da esquerda
                 tl.fromTo(badgeRef.current,
-                    { x: -50, opacity: 0 },
-                    { x: 0, opacity: 1, duration: 0.8 }
+                    { x: shouldAnimate ? -50 : 0, opacity: 0 },
+                    { x: 0, opacity: 1, duration: animationDuration }
                 );
 
                 // Título aparece com fade in e slide up
                 tl.fromTo(titleRef.current,
-                    { y: 30, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8 },
-                    '-=0.5'
+                    { y: shouldAnimate ? 30 : 0, opacity: 0 },
+                    { y: 0, opacity: 1, duration: animationDuration },
+                    shouldAnimate ? '-=0.5' : '-=0.05'
                 );
 
                 // Tablet aparece com scale e fade
                 tl.fromTo(tabletRef.current,
-                    { scale: 0.9, opacity: 0 },
-                    { scale: 1, opacity: 1, duration: 1 },
-                    '-=0.6'
+                    { scale: shouldAnimate ? 0.9 : 1, opacity: 0 },
+                    { scale: 1, opacity: 1, duration: prefersReducedMotion ? DURATIONS.instant : DURATIONS.slowest },
+                    shouldAnimate ? '-=0.6' : '-=0.05'
                 );
 
                 // Redes sociais aparecem da direita
                 tl.fromTo(socialRef.current,
-                    { x: 50, opacity: 0 },
-                    { x: 0, opacity: 1, duration: 0.8 },
-                    '-=0.7'
+                    { x: shouldAnimate ? 50 : 0, opacity: 0 },
+                    { x: 0, opacity: 1, duration: animationDuration },
+                    shouldAnimate ? '-=0.7' : '-=0.05'
                 );
 
                 // Texto descritivo fade in
                 tl.fromTo(textRef.current,
-                    { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8 },
-                    '-=0.6'
+                    { y: shouldAnimate ? 20 : 0, opacity: 0 },
+                    { y: 0, opacity: 1, duration: animationDuration },
+                    shouldAnimate ? '-=0.6' : '-=0.05'
                 );
 
                 // Botões aparecem com fade in simples
                 tl.fromTo(buttonsRef.current,
                     { opacity: 0 },
-                    { opacity: 1, duration: 0.8 },
-                    '-=0.5'
+                    { opacity: 1, duration: animationDuration },
+                    shouldAnimate ? '-=0.5' : '-=0.05'
                 );
+            };
+
+            // Função que executa a animação de saída (reversa)
+            const playExitAnimation = () => {
+                if (prefersReducedMotion) {
+                    gsap.to([badgeRef.current, titleRef.current, tabletRef.current,
+                    socialRef.current, textRef.current, buttonsRef.current], {
+                        opacity: 0,
+                        duration: DURATIONS.instant
+                    });
+                    return;
+                }
+
+                const tl = gsap.timeline({ defaults: { ease: EASINGS.easeIn } });
+
+                tl.to(buttonsRef.current, { opacity: 0, duration: DURATIONS.slow });
+                tl.to(textRef.current, { y: -20, opacity: 0, duration: DURATIONS.slow }, '-=0.4');
+                tl.to(socialRef.current, { x: 50, opacity: 0, duration: DURATIONS.slow }, '-=0.4');
+                tl.to(tabletRef.current, { scale: 0.9, opacity: 0, duration: DURATIONS.slower }, '-=0.4');
+                tl.to(titleRef.current, { y: -30, opacity: 0, duration: DURATIONS.slow }, '-=0.5');
+                tl.to(badgeRef.current, { x: -50, opacity: 0, duration: DURATIONS.slow }, '-=0.5');
             };
 
             // Executa a animação inicial
@@ -77,28 +105,32 @@ export function Hero() {
                 start: 'top 80%',
                 end: 'bottom 20%',
                 onEnter: () => playEnterAnimation(),
-                onEnterBack: () => playEnterAnimation(), // Quando volta rolando para cima
+                onLeave: () => playExitAnimation(),
+                onEnterBack: () => playEnterAnimation(),
+                onLeaveBack: () => playExitAnimation(),
             });
 
             // Fade out suave apenas no conteúdo quando está saindo da tela
-            gsap.to(contentRef.current, {
-                opacity: 0,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: heroRef.current,
-                    start: 'bottom 40%',
-                    end: 'bottom top',
-                    scrub: 1,
-                }
-            });
+            if (!prefersReducedMotion) {
+                gsap.to(contentRef.current, {
+                    opacity: 0,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: heroRef.current,
+                        start: 'bottom 40%',
+                        end: 'bottom top',
+                        scrub: 1,
+                    }
+                });
+            }
 
         }, heroRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [prefersReducedMotion]);
 
     return (
-        <section ref={heroRef} className="relative min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-orange-50 pt-16">
+        <section id="hero" ref={heroRef} className="relative min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-orange-50 pt-16">
             {/* Conteúdo principal */}
             <div ref={contentRef} className="container mx-auto px-4 lg:px-6 relative z-10">
                 <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[60vh] py-4 lg:py-0">
@@ -109,7 +141,7 @@ export function Hero() {
                                 <span className="w-4 h-1 bg-secondary rounded-full"></span>
                                 Aqui o servidor público tem voz
                             </div>
-                            <h1 ref={titleRef} className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold leading-tight">
+                            <h1 ref={titleRef} className="text-4xl sm:text-3xl lg:text-4xl xl:text-6xl  font-bold leading-tight">
                                 <span className="text-primary font-red-hat-text">Advocacia para</span>
                                 <br />
                                 <span className="text-secondary">servidores Públicos</span>
@@ -117,20 +149,63 @@ export function Hero() {
 
                         </div>
                         {/* Container do tablet */}
-                        <div className="relative mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125">
-                            {/* Tablet Animado */}
-                            <div ref={tabletRef} className="relative">
-                                <AnimatedTablet />
+                        <div className="py-10 pos mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125">
+                            {/* Tablet Animado com conteúdo dinâmico */}
+                            <div ref={tabletRef} className="relative animate-float">
+                                <AnimatedTablet imageUrl="https://res.cloudinary.com/dlykmt2r4/image/upload/v1770372564/Group_131_tnsyxg.png" />
                             </div>
 
                             {/* Elementos decorativos */}
                             <div
-                                className="absolute -bottom-4 lg:-bottom-8 -left-4 lg:-left-8 w-12 h-12 sm:w-16 sm:h-16 lg:w-32 lg:h-32 opacity-40 rounded-full"
+                                className="absolute -bottom-4 lg:-bottom-8 -left-4 lg:-left-8 w-12 h-12 sm:w-16 sm:w-16 lg:w-32 lg:h-32 opacity-40 rounded-full animate-pulse-slow"
                                 style={{ backgroundColor: '#01165A20' }}
                             ></div>
-                            
+
 
                         </div>
+
+                        <style jsx>{`
+                            @keyframes float {
+                                0%, 100% {
+                                    transform: translateY(0px) translateX(0px);
+                                }
+                                25% {
+                                    transform: translateY(-3px) translateX(1px);
+                                }
+                                50% {
+                                    transform: translateY(-2px) translateX(-1px);
+                                }
+                                75% {
+                                    transform: translateY(-4px) translateX(0.5px);
+                                }
+                            }
+
+                            @keyframes pulse-slow {
+                                0%, 100% {
+                                    transform: scale(1);
+                                    opacity: 0.4;
+                                }
+                                50% {
+                                    transform: scale(1.05);
+                                    opacity: 0.5;
+                                }
+                            }
+
+                            .animate-float {
+                                animation: float 8s ease-in-out infinite;
+                            }
+
+                            .animate-pulse-slow {
+                                animation: pulse-slow 6s ease-in-out infinite;
+                            }
+
+                            @media (prefers-reduced-motion: reduce) {
+                                .animate-float,
+                                .animate-pulse-slow {
+                                    animation: none;
+                                }
+                            }
+                        `}</style>
 
                     </div>
 
@@ -211,8 +286,8 @@ export function Hero() {
                                 75deg,
                                 transparent 0px,
                                 transparent 8px,
-                                rgba(39, 52, 89, 0.5) 8px,
-                                rgba(59, 52, 89, 0.5) 10px,
+                                rgba(39, 52, 89, 0) 8px,
+                                rgba(59, 52, 89, 0) 10px,
                                 transparent 8px,
                                 transparent 6px
                             )
