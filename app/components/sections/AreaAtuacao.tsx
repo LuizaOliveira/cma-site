@@ -108,7 +108,7 @@ export function AreaAtuacao() {
 
   return (
     <section id="area-atuacao" ref={sectionRef} className="py-10 sm:py-16 lg:py-20 bg-primary border-0">
-      <div ref={contentRef} className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-16">
+      <div ref={contentRef} className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 ">
         {/* Título da seção */}
         {/* <AnimatedSection animation="fadeUp"> */}
         <SectionTitle title='Nossa' subtitle='Aqui o servidor público tem voz' center dark>Área De Atuação</SectionTitle>
@@ -139,38 +139,80 @@ export function AreaAtuacao() {
 
 
           {/* Conteúdo Principal público */}
-          <div className="space-y-4 sm:space-y-6  text-ligth-gray order-1 md:order-2 text-center md:text-left ">
+          <div className="space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2  md:text-left ">
             {/* <AnimatedSection animation="fadeUp" delay={0.2}> */}
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-medium">Principal público</h3>
-            <p className="text-sm sm:text-base lg:text-md leading-relaxed pr-5 text-justify font-normal">
-              Com ampla experiência no Direito do Direito Administrativo, nossa
-              equipe assessora os servidores públicos da forma que você
-              precisa, fazendo a melhor avaliação das relações existentes entre
-              servidor e a competente administração pública interna.
-            </p>
+            <div className='itens-center justify-center'>
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-medium">Principal público</h3>
+              <p className="text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal">
+                Com ampla experiência no Direito do Direito Administrativo, nossa
+                equipe assessora os servidores públicos da forma que você
+                precisa, fazendo a melhor avaliação das relações existentes entre
+                servidor e a competente administração pública interna.
+              </p>
+
+            </div>
             {/* </AnimatedSection> */}
 
             {/* Lista de serviços */}
             <ul className="space-y-3 sm:space-y-4">
-              <li className="flex items-center gap-3 justify-center md:justify-start">
+              <li className="flex md:justify-start">
                 <CheckItem title='Professores ativos e aposentados' />
 
               </li>
-              <li className="flex items-center gap-3 justify-center md:justify-start">
+              <li className="flex md:justify-start">
                 <CheckItem title='Servidores públicos' />
                 <span className="text-ligth-gray text-sm sm:text-base">Servidores públicos</span>
               </li>
-              <li className="flex items-center gap-3 justify-center md:justify-start">
+              <li className="flex md:justify-start">
                 <CheckItem title='Servidores públicos' />
               </li>
             </ul>
           </div>
         </div>
 
+        <div
+          ref={card1Ref}
+          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg lg:hidden xl:hidden"
+          style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
+        >
+          {/* <div className="order-2 md:order-1"> */}
+          {/* Imagem do escritório */}
+          <div className="relative">
+            <div className="rounded-lg overflow-hidden shadow-2xl">
+              <Image
+                src="/office-team.svg"
+                alt="Equipe de advocacia trabalhando"
+                width={500}
+                height={400}
+                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg clip-path-corner-right"
+                style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
+              />
+              {/* </div> */}
+            </div>
+          </div>
+
+
+
+          {/* Conteúdo Principal público */}
+          <div className="space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2 text-center md:text-left  ">
+            {/* <AnimatedSection animation="fadeUp" delay={0.2}> */}
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-medium">Advocacia para <br/>servidores públicos</h3>
+            <p className="text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal">
+              O núcleo do Direito Administrativo direciona sua atuação e sua atenção nos direitos dos Servidores Públicos
+              através de assessoria e consultoria jurídica com o escopo de esclarecer direitos, analisar documentos e processos
+              de forma a estabelecer a melhor solução para cada pleito, uma vez que é necessário a discussão da legalidade e/ou
+              constitucionalidade do direito e obrigações por meio da interpretação de novas normas e jurisprudência, sejam elas
+              decorrentes da falta de cumprimento dos direitos da Administração Pública, sejam em razão de erros materiais ou de
+              interpretação pacificadas pelos tribunais.
+            </p>
+            {/* </AnimatedSection> */}
+          </div>
+        </div>
+
         {/* Segunda linha - Advocacia para servidores públicos */}
         <div
           ref={card1Ref}
-          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5  rounded-lg"
+          className="bg-secondary-blue hidden lg:grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg"
           style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
         >
           <div className="space-y-4 sm:space-y-6 text-white order-1 md:order-1 px-2 sm:px-6 lg:px-10 my-2 sm:my-4 text-center md:text-left">
@@ -223,7 +265,7 @@ export function AreaAtuacao() {
           </a>
         </div>
       </div>
-      {/* <div className="absolute bottom-0 left-0 w-full">
+      <div className="absolute bottom-0 left-0 w-full">
         <Image
           src="/lines.svg"
           alt=""
@@ -231,7 +273,7 @@ export function AreaAtuacao() {
           height={100}
           className="w-full h-auto"
         />
-      </div> */}
+      </div>
     </section>
   );
 }

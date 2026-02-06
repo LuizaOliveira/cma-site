@@ -136,23 +136,36 @@ export function Hero() {
                 <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[60vh] py-4 lg:py-0">
                     {/* Área da imagem do tablet - À ESQUERDA */}
                     <div className="relative lg:pr-8 order-2 lg:order-1 px-4 lg:px-0">
-                        <div className='mt-12 mb-5'>
-                            <div ref={badgeRef} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-text-darkgray">
-                                <span className="w-4 h-1 bg-secondary rounded-full"></span>
-                                Aqui o servidor público tem voz
+                        <div className='xl:mt-12 sm:mt-8 mb-5'>
+                            <div>
+                                <div ref={badgeRef} className="inline-flex items-center gap-2 py-2 rounded-full text-sm font-medium text-darkgray">
+                                    <span className="w-4 h-1 bg-secondary rounded-full"></span>
+                                    Aqui o servidor público tem voz
+                                </div>
+                                <h1 ref={titleRef} className="text-3xl sm:text-2xl md:text-4xl lg:text-4xl xl:text-6xl  font-bold leading-tight">
+                                    <span className="text-primary font-red-hat-text">Advocacia para</span>
+                                    <br />
+                                    <span className="text-secondary">servidores Públicos</span>
+                                </h1>
+
+                                <div ref={textRef} className="space-y-2 lg:space-y- md:text-xl sm:text-justify mb-3 my-6 lg:max-w-none">
+
+                                    <p className="md:max-w-md  text-base sm:text-xs md:text-xl lg:hidden text-custom leading-relaxed mb-6">
+                                        Fique por dentro das principais notícias, atualizações e conteúdos
+                                        relevantes para servidores públicos
+                                    </p>
+                                </div>
+
                             </div>
-                            <h1 ref={titleRef} className="text-4xl sm:text-3xl lg:text-4xl xl:text-6xl  font-bold leading-tight">
-                                <span className="text-primary font-red-hat-text">Advocacia para</span>
-                                <br />
-                                <span className="text-secondary">servidores Públicos</span>
-                            </h1>
 
                         </div>
                         {/* Container do tablet */}
-                        <div className="py-10 pos mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125">
+                        <div className="mx-auto lg:mx-0 w-[min(90vw,40rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125 md:w-[min(90vw,30rem)]">
+
                             {/* Tablet Animado com conteúdo dinâmico */}
-                            <div ref={tabletRef} className="relative animate-float">
+                            <div ref={tabletRef} className="relative animate-float py-8">
                                 <AnimatedTablet imageUrl="https://res.cloudinary.com/dlykmt2r4/image/upload/v1770372564/Group_131_tnsyxg.png" />
+
                             </div>
 
                             {/* Elementos decorativos */}
@@ -210,7 +223,7 @@ export function Hero() {
                     </div>
 
                     {/* Conteúdo à direita */}
-                    <div className="space-y-6 lg:space-y-8 lg:pl-8 order-1 lg:order-2 flex flex-col justify-center px-4 lg:px-0">
+                    <div className="hidden lg:flex space-y-6 lg:space-y-8 lg:pl-8 order-1 lg:order-2 flex-col justify-center px-4 lg:px-0">
 
                         {/* Redes Sociais no topo */}
                         <div ref={socialRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 lg:gap-6 relative sm:-translate-y-4 lg:-translate-y-8">
@@ -275,7 +288,7 @@ export function Hero() {
             </div>
 
             {/* Faixa azul inferior que ocupa metade da tela */}
-            <div className="absolute bottom-0 left-0 w-full h-1/4 bg-primary overflow-hidden">
+            <div className="absolute bottom-0 left-0 w-full h-1/3 xl:h-1/4 bg-primary overflow-hidden">
                 {/* Container com padrão CSS responsivo posicionado no final */}
                 <div className="w-full h-full flex items-end justify-center px-2 pb-4">
                     <div
