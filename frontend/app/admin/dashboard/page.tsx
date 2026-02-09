@@ -126,27 +126,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 p-6 rounded-2xl space-y-4">
-                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Configurações de Envio</h4>
-                   
-                   <label className="flex items-center gap-3 cursor-pointer group">
-                     <div className="relative flex items-center">
-                        <input type="checkbox" className="peer hidden" id="notif" />
-                        <div className="w-5 h-5 border-2 border-slate-300 rounded peer-checked:bg-[#F97D0E] peer-checked:border-[#F97D0E] transition-all"></div>
-                        <Icon icon="ph:check-bold" className="absolute text-white text-xs left-[4px] opacity-0 peer-checked:opacity-100 transition-opacity" />
-                     </div>
-                     <span className="text-sm text-slate-700 font-bold group-hover:text-[#F97D0E] transition-colors">Disparar Notificação Push</span>
-                   </label>
-
-                   <label className="flex items-center gap-3 cursor-pointer group">
-                     <div className="relative flex items-center">
-                        <input type="checkbox" className="peer hidden" id="destaque" />
-                        <div className="w-5 h-5 border-2 border-slate-300 rounded peer-checked:bg-[#F97D0E] peer-checked:border-[#F97D0E] transition-all"></div>
-                        <Icon icon="ph:check-bold" className="absolute text-white text-xs left-[4px] opacity-0 peer-checked:opacity-100 transition-opacity" />
-                     </div>
-                     <span className="text-sm text-slate-700 font-bold group-hover:text-[#F97D0E] transition-colors">Fixar no Topo da Home</span>
-                   </label>
-                </div>
+                
 
                 <div className="flex flex-col gap-3 pt-6">
                   <button 
