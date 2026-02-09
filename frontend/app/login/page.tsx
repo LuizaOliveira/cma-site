@@ -7,7 +7,6 @@ export default function LoginPage() {
     <main>
       {/* Aqui renderiza apenas a tela de login */}
       <AdminLoginPage />
-      <AdminDashboard />
     </main>
   );
 }
