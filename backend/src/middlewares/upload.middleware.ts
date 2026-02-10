@@ -31,11 +31,32 @@ const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.
   }
 };
 
+// File filter para upload individual (aceita imagens e PDFs)
+const singleFileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const allowedPdfTypes = ['application/pdf'];
+
+  if (allowedImageTypes.includes(file.mimetype) || allowedPdfTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error(`Tipo de arquivo não permitido: ${file.mimetype}`));
+  }
+};
+
 export const upload = multer({
   storage,
   fileFilter,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB
+  },
+});
+
+// Upload para arquivos individuais
+export const singleUpload = multer({
+  storage,
+  fileFilter: singleFileFilter,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB para upload individual
   },
 });
 

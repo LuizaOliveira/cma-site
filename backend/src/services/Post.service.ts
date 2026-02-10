@@ -3,7 +3,11 @@ import prisma from '../lib/prisma';
 
 export class PostService {
   async findAll(): Promise<Post[]> {
-    return prisma.post.findMany();
+    return prisma.post.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
   }
 
   async findById(id: number): Promise<Post | null> {
@@ -15,6 +19,9 @@ export class PostService {
   async findPublished(): Promise<Post[]> {
     return prisma.post.findMany({
       where: { published: true },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
   }
 
@@ -22,6 +29,8 @@ export class PostService {
     title: string;
     file: string;
     thumbnail: string;
+    newsImage: string;
+    description: string;
     published?: boolean;
   }): Promise<Post> {
     return prisma.post.create({
@@ -35,6 +44,8 @@ export class PostService {
       title?: string;
       file?: string;
       thumbnail?: string;
+      newsImage?: string;
+      description?: string;
       published?: boolean;
     }
   ): Promise<Post> {

@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Icons } from '../ui/Button';
 import { AnimatedTablet } from '../animated/AnimatedTablet';
 import { Icon } from '@iconify/react';
@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { DURATIONS, EASINGS } from '../../lib/animations/constants';
+import { getLatestPost } from '../../lib/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,7 +20,20 @@ export function Hero() {
     const socialRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
     const buttonsRef = useRef<HTMLDivElement>(null);
+    const [tableUrl, setTableUrl] = useState("https://res.cloudinary.com/dlykmt2r4/image/upload/v1770372564/Group_131_tnsyxg.png");
     const prefersReducedMotion = useReducedMotion();
+
+    // Buscar o post mais recente para usar a thumbnail
+    useEffect(() => {
+        const fetchLatestPost = async () => {
+            const result = await getLatestPost();
+            if (result.success && result.data?.thumbnail) {
+                setTableUrl(result.data.thumbnail);
+            }
+        };
+
+        fetchLatestPost();
+    }, []);
 
     useEffect(() => {
         if (!heroRef.current || !contentRef.current) return;
@@ -136,28 +150,38 @@ export function Hero() {
                 <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[60vh] py-4 lg:py-0">
                     {/* Área da imagem do tablet - À ESQUERDA */}
                     <div className="relative lg:pr-8 order-2 lg:order-1 px-4 lg:px-0">
-                        <div className='mt-12 mb-5'>
-                            <div ref={badgeRef} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-text-darkgray">
-                                <span className="w-4 h-1 bg-secondary rounded-full"></span>
-                                Aqui o servidor público tem voz
-                            </div>
-                            <h1 ref={titleRef} className="text-4xl sm:text-3xl lg:text-4xl xl:text-6xl  font-bold leading-tight">
-                                <span className="text-primary font-red-hat-text">Advocacia para</span>
-                                <br />
-                                <span className="text-secondary">servidores Públicos</span>
-                            </h1>
+                        <div className='xl:mt-12 sm:mt-8 mb-5'>
+                            <div>
+                                <div ref={badgeRef} className="inline-flex items-center gap-2 py-2 rounded-full text-sm font-medium text-darkgray">
+                                    <span className="w-4 h-1 bg-secondary rounded-full"></span>
+                                    Aqui o servidor público tem voz
+                                </div>
+                                <h1 ref={titleRef} className="text-3xl sm:text-2xl md:text-4xl lg:text-4xl xl:text-6xl  font-bold leading-tight">
+                                    <span className="text-primary font-red-hat-text">Advocacia para</span>
+                                    <br />
+                                    <span className="text-secondary">servidores Públicos</span>
+                                </h1>
 
+                                <div ref={textRef} className="space-y-2 lg:space-y- md:text-xl sm:text-justify mb-3 my-6 lg:max-w-none">
+
+                                    <p className="md:max-w-md  text-base sm:text-xs md:text-xl lg:hidden text-custom leading-relaxed mb-6">
+                                        Fique por dentro das principais notícias, atualizações e conteúdos
+                                        relevantes para servidores públicos
+                                    </p>
+                                </div>
+
+                            </div>
                         </div>
                         {/* Container do tablet */}
                         <div className="py-10 pos mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125">
                             {/* Tablet Animado com conteúdo dinâmico */}
                             <div ref={tabletRef} className="relative animate-float">
-                                <AnimatedTablet imageUrl="https://res.cloudinary.com/dlykmt2r4/image/upload/v1770372564/Group_131_tnsyxg.png" />
+                                <AnimatedTablet imageUrl={tableUrl} />
                             </div>
 
                             {/* Elementos decorativos */}
                             <div
-                                className="absolute -bottom-4 lg:-bottom-8 -left-4 lg:-left-8 w-12 h-12 sm:w-16 sm:w-16 lg:w-32 lg:h-32 opacity-40 rounded-full animate-pulse-slow"
+                                className="absolute -bottom-4 lg:-bottom-8 -left-4 lg:-left-8 w-12 h-12 sm:w-16 lg:w-32 lg:h-32 opacity-40 rounded-full animate-pulse-slow"
                                 style={{ backgroundColor: '#01165A20' }}
                             ></div>
 
@@ -210,7 +234,7 @@ export function Hero() {
                     </div>
 
                     {/* Conteúdo à direita */}
-                    <div className="space-y-6 lg:space-y-8 lg:pl-8 order-1 lg:order-2 flex flex-col justify-center px-4 lg:px-0">
+                    <div className="hidden lg:flex space-y-6 lg:space-y-8 lg:pl-8 order-1 lg:order-2 flex-col justify-center px-4 lg:px-0">
 
                         {/* Redes Sociais no topo */}
                         <div ref={socialRef} className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 lg:gap-6 relative sm:-translate-y-4 lg:-translate-y-8">
