@@ -55,7 +55,6 @@ export function SimplePDFViewer({ pdfUrl }: PDFViewerProps) {
     }
   };
 
-  // ...existing code...
 
   const handleDownload = () => {
     fetch(pdfUrl)
