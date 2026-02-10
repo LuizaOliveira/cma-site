@@ -8,6 +8,7 @@ import { NossaEquipe } from './components/sections/NossaEquipe';
 
 import { Testimonials } from './components/sections/Testimonials';
 import { Contact } from './components/sections/Contact';
+import { NewsFilterClient } from './components/features/news/NewsFilterClient';
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <NossaEquipe />
       <Testimonials />
       <Contact />
+      <NewsFilterClient/>
       <Footer />
     </main>
   );
