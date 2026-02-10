@@ -107,17 +107,17 @@ export function SobreNos() {
               </div>
             </div>
           </div>
-          <div className="lg:col-span-6  justify-center items-center mt-8 hidden lg:mt-0 sm:hidden md:hidden lg:flex xl:flex">
-            <div ref={imagesRef} className="h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full relative mt-20">
-              <Image src="/fotoEscritorio.png" alt="escritorio" layout="fill" objectFit="cover" className="rounded-full" />
-              <div className="h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 rounded-full relative -right-32 sm:-right-44 md:-right-52 lg:-right-64 bottom-4 sm:bottom-6 md:bottom-8">
-                <Image src="/fotoAssinando.png" alt="assinando" layout="fill" objectFit="cover" className="rounded-full" />
+          <div className="lg:col-span-6 flex justify-center items-center -mt-15 lg:mt-0">
+            <div ref={imagesRef} className="h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 relative mt-20">
+              <Image src="/fotoEscritorio.png" alt="escritorio" layout="fill" objectFit="cover" className='md:rounded-full rounded-2xl rounded-tl-[100px] shadow-lg shadow-gray-700' />
+              <div className="h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 relative -right-32 sm:-right-44 md:-right-52 lg:-right-64 bottom-4 sm:bottom-6 md:bottom-8 rounded-full">
+                <Image src="/fotoAssinando.png" alt="assinando" layout="fill" objectFit="cover" className='rounded-full'/>
               </div>
             </div>
           </div>
         </div>
 
-        <div ref={cardsRef} className='mt-14 md:mt-24 flex flex-wrap sm:gap-8 md:gap-12 lg:gap-40'>
+        <div ref={cardsRef} className='mt-14 md:mt-24 flex flex-nowrap overflow-x-scroll md:overflow-hidden gap-8 md:gap-12 lg:gap-40'>
           <SobreNosCard titulo='Transparencia' texto='Mais de 15 mil ações procedentes' icone="octicon:law-16" />
           <SobreNosCard titulo='Atuação' texto='Atuação em seis Estados brasileiros' icone="game-icons:brazil" />
           <SobreNosCard titulo='Atuação' texto='Quase 10 anos de atuação na área jurídica' icone="fa7-solid:hourglass-2" />
@@ -125,7 +125,7 @@ export function SobreNos() {
       </div>
       <div className="absolute bottom-0 left-0 w-full">
         <Image
-          src="/lines.svg"
+          src="/Lines.svg"
           alt=""
           width={1920}
           height={100}

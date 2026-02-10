@@ -43,7 +43,7 @@ export function NossaEquipe() {
         </div>
 
         {/* Separador visual sutil */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-12 md:mb-20"></div>
+        <div className="w-full h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-12 md:mb-20"></div>
 
         {/* Bloco 2: Título + Cards (agrupados) */}
         <div className="mt-12 md:mt-16">
@@ -57,10 +57,13 @@ export function NossaEquipe() {
             </div>
           </div>
 
-          <div className="space-y-6 md:space-y-0">
+          <div className="md:space-y-0">
             <AdvCard imgSrc="clodonilBG.png" nome="Clodonil Monteiro" titulo="Fundador" texto={loremIpsum} />
+            <div className='mt-8 mb-10 h-px md:h-0 w-full bg-gray-300'></div>
             <AdvCard imgSrc="edjaneBG.png" nome="Edjane Lucena" titulo="Fundadora" texto={loremIpsum} />
+            <div className='mt-8 mb-10 h-px md:h-0 w-full bg-gray-300'></div>
             <AdvCard imgSrc="lauraBG.png" nome="Laura Maria" titulo="Sócia" texto={loremIpsum} />
+            <div className='mt-8 mb-10 h-px md:h-0 w-full bg-gray-300'></div>
             <AdvCard imgSrc="diegoBG.png" nome="Diego Medeiros" titulo="Sócio" texto={loremIpsum} />
           </div>
         </div>

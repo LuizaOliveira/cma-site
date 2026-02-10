@@ -207,7 +207,7 @@ export function Testimonials() {
                     className="bg-secondary-blue p-6 lg:p-8 rounded-2xl border border-white/5 relative w-full lg:max-w-[540px] testimonial-card min-h-[420px] flex flex-col justify-between"
                   >
                     <Image
-                      src="/vector.svg"
+                      src="/Vector.svg"
                       alt=""
                       width={120}
                       height={120}
