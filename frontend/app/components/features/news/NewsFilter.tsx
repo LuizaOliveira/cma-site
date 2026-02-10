@@ -62,14 +62,12 @@ export function NewsFilter() {
       createdAt: new Date().toISOString(),
       published: true
     };
-    // Garantir que pageCount não seja undefined
     if (!post.pageCount || post.pageCount === 0) {
-      post.pageCount = 2; // fallback padrão
+      post.pageCount = 2; 
     }
     return post;
   }, [posts]);
   
-  // Posts 2-4 para as notícias
   const newsCards = posts;
 
   // Formatar data
@@ -81,11 +79,6 @@ export function NewsFilter() {
       year: 'numeric'
     });
   };
-
-  console.log('Latest post:', latestPost);
-  console.log('PDF URL:', latestPost?.file);
-  console.log('Page count:', latestPost?.pageCount);
-  console.log('News cards:', newsCards.length);
 
   if (loading) {
     return (
