@@ -22,6 +22,7 @@ export function Header() {
     { id: 'sobre-nos', label: 'Sobre Nós' },
     { id: 'equipe', label: 'Equipe' },
     { id: 'contato', label: 'Contato' },
+    { id: 'noticias', label: 'Notícias' },
   ];
 
   // Função de scroll suave

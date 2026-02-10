@@ -70,3 +70,12 @@ body {
 .light-gray { color: #A9B5CE; }
 .bg-light-gray { background-color: #A9B5CE; }
 .border-light-gray { border-color: #A9B5CE; }
+
+/* ===== RESET react-pdf ===== */
+.react-pdf__Page {
+  margin: 0 !important;
+}
+
+.react-pdf__Page__canvas {
+  display: block;
+}

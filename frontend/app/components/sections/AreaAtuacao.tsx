@@ -265,7 +265,7 @@ export function AreaAtuacao() {
           </a>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full">
+      {/* <div className="absolute bottom-0 left-0 w-full">
         <Image
           src="/lines.svg"
           alt=""
@@ -273,7 +273,7 @@ export function AreaAtuacao() {
           height={100}
           className="w-full h-auto"
         />
-      </div>
+      </div> */}
     </section>
   );
 }
