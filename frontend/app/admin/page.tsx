@@ -42,9 +42,17 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2F4F5]">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-
-        {/* Cabeçalho do Painel */}
+      <div
+        className="
+          w-full max-w-md bg-white rounded-2xl
+          shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+          hover:shadow-[0_25px_70px_rgba(0,0,0,0.18)]
+          transition-all duration-300
+          overflow-hidden border border-gray-100
+        "
+      >
+        
+        
         <div className="bg-[#1B1B3A] p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[#273459] rounded-xl mb-4 border border-white/10">
             <Icon icon="material-symbols:admin-panel-settings-outline" className="text-3xl text-[#F97D0E]" />
@@ -53,7 +61,7 @@ export default function AdminLoginPage() {
           <p className="text-[#6A80B0] text-sm mt-1">Gestão de Conteúdo e Notícias</p>
         </div>
 
-        {/* Formulário de Login */}
+        
         <div className="p-8">
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Mensagem de erro */}
