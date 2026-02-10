@@ -143,6 +143,16 @@ export function Hero() {
         return () => ctx.revert();
     }, [prefersReducedMotion]);
 
+    // Scroll suave até a seção de notícias
+    const scrollToNews = () => {
+        const el = document.getElementById('noticias');
+        if (!el) return;
+        const headerOffset = 80; // combinar com Header
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    };
+
     return (
         <section id="hero" ref={heroRef} className="relative min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-orange-50 pt-16">
             {/* Conteúdo principal */}
@@ -173,9 +183,22 @@ export function Hero() {
                             </div>
                         </div>
                         {/* Container do tablet */}
-                        <div className="py-10 pos mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-125">
+                        <div className="py-10 pos mx-auto lg:mx-0 w-[min(85vw,20rem)] sm:w-[min(70vw,25rem)] lg:w-[min(90vw,35rem)] lg:max-w-130">
                             {/* Tablet Animado com conteúdo dinâmico */}
-                            <div ref={tabletRef} className="relative animate-float">
+                            <div
+                                ref={tabletRef}
+                                className="relative animate-float cursor-pointer"
+                                role="button"
+                                tabIndex={0}
+                                aria-label="Abrir notícias"
+                                onClick={scrollToNews}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        scrollToNews();
+                                    }
+                                }}
+                            >
                                 <AnimatedTablet imageUrl={tableUrl} />
                             </div>
 

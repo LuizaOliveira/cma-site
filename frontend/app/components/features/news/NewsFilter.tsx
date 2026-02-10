@@ -96,24 +96,24 @@ export function NewsFilter() {
     <div id="noticias" className="bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto px-4 md:px-0">
         {/* Cabeçalho */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-0">
           <div className='w-2xl'>
-            <SectionTitle title="Fique atualizado e confira as últimas" subtitle="Fique por dentro das novidades">notícias e conteúdos</SectionTitle>
+            <SectionTitle title="Fique atualizado e confira as últimas" subtitle="Fique por dentro das novidades" news>notícias e conteúdos</SectionTitle>
 
 
           </div>
 
-          <button className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-colors flex items-center gap-2">
+          {/* <button className="bg-orange-500 text-white px-6 py-0 rounded-full hover:bg-secondary transition-colors flex items-center gap-2">
             Ver todas
             <Icon icon="mdi:chevron-right" className="w-4 h-4" />
-          </button>
+          </button> */}
         </div>
 
         {/* Layout duas colunas */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Coluna PDF - 1/3 */}
           <div className="lg:col-span-1">
-            {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
+            {/* {error && <div className="text-red-500 text-sm mb-2">{error}</div>} */}
             <SimplePDFViewer
               pdfUrl={latestPost.file}
               totalPages={latestPost.pageCount}

@@ -224,7 +224,7 @@ export function SimplePDFViewer({ pdfUrl }: PDFViewerProps) {
             className="p-1 hover:bg-gray-200 rounded"
             title="Baixar PDF"
           >
-            <Icon icon="mdi:download" className="w-4 h-4 text-red-600" />
+            <Icon icon="mdi:download" className="w-4 h-4 text-gray-600" />
           </button>)}
 
           <button

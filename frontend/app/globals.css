@@ -20,6 +20,7 @@
   --color-text-custom: var(--text-color);
   --color-text-darkgray: var(--text-darkgray);
   --color-ligth-gray: var(--ligth-gray);
+  --color-brand: #01165A;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-red-hat-text: var(--font-red-hat-text);
