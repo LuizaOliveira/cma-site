@@ -245,7 +245,7 @@ export function Testimonials() {
       {/* Lines decorativas na parte superior */}
       <div className="absolute top-0 left-0 w-full mt-9">
         <Image
-          src="/lines.svg"
+          src="/Lines.svg"
           alt=""
           width={1920}
           height={100}
@@ -280,7 +280,7 @@ export function Testimonials() {
                   >
                     {/* Vector decorativo */}
                     <Image
-                      src="/vector.svg"
+                      src="/Vector.svg"
                       alt=""
                       width={150}
                       height={150}

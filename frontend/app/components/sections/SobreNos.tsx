@@ -34,7 +34,7 @@ export function SobreNos() {
           </div>
         </div>
 
-        <div className='mt-14 md:mt-24 flex flex-wrap sm:gap-8 md:gap-12 lg:gap-40'>
+        <div className='mt-14 md:mt-24 flex flex-nowrap overflow-x-scroll md:overflow-hidden gap-8 md:gap-12 lg:gap-40'>
           <SobreNosCard titulo='Transparencia' texto='Mais de 15 mil ações procedentes' icone="octicon:law-16" />
           <SobreNosCard titulo='Atuação' texto='Atuação em seis Estados brasileiros' icone="game-icons:brazil" />
           <SobreNosCard titulo='Atuação' texto='Quase 10 anos de atuação na área jurídica' icone="fa7-solid:hourglass-2" />
@@ -42,7 +42,7 @@ export function SobreNos() {
       </div>
       <div className="absolute bottom-0 left-0 w-full">
         <Image
-          src="/lines.svg"
+          src="/Lines.svg"
           alt=""
           width={1920}
           height={100}

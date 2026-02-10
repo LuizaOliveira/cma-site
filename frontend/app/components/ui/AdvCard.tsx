@@ -9,9 +9,9 @@ interface AdvCardProps {
 
 export function AdvCard({ imgSrc, nome, titulo, texto }: AdvCardProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-0 mb-6 md:mb-10">
-      <div className="w-full md:w-50 bg-[#F5F8FF] md:col-span-2">
-        <div>
+    <div className="md:flex md:gap-10 md:mb-10 -mb-1">
+      <div className="md:flex md:items-center w-full md:w-50">
+        <div className="min-w-50">
           <Image
             src={`/${imgSrc}`}
             alt="Tablet com notificações para servidores públicos"
@@ -19,22 +19,21 @@ export function AdvCard({ imgSrc, nome, titulo, texto }: AdvCardProps) {
             height={200}
             className="w-full md:w-auto h-auto object-cover"
           />
-          <div className="flex">
+          <div className="flex gap-0">
             <div className="text-white bg-primary p-2 w-full text-sm md:text-base">
-              {<span className="underline underline-offset-4 decoration-2 decoration-secondary md:text-base sm:text-2xl">{nome.split(' ')[0]}</span>}
-              {<span className="md:text-base sm:text-2xl"> {nome.split(' ')[1]}</span>}
-              {/* <div className="bg-secondary py-[1px] w-12 -mt-1" /> */}
+              {<span className="underline underline-offset-4 decoration-2 decoration-secondary md:text-base text-2xl">{nome.split(' ')[0]}</span>}
+              {<span className="md:text-base text-2xl"> {nome.split(' ')[1]}</span>}
             </div>
-            <span className="bg-primary w-4" />
-            <span className="bg-secondary-blue w-6" />
+            <span className="bg-[#001F7B] w-4" />
+            <span className="bg-secondary-blue w-8" />
           </div>
         </div>
       </div>
-      <div className="md:col-span-10 px-2 md:px-0">
+      <div className="px-2 md:px-0">
         <div className="text-white bg-secondary w-fit px-4 py-1 rounded-2xl my-3 md:my-6 text-sm md:text-base">
           {titulo}
         </div>
-        <p className="text-[#6A80B0] max-w-full md:max-w-300 text-justify leading-relaxed md:leading-loose text-sm md:text-base">
+        <p className="text-[#6A80B0] text-justify leading-relaxed md:leading-loose text-sm md:text-base">
           {texto}
         </p>
       </div>
