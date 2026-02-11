@@ -129,7 +129,7 @@ export function SobreNos() {
           alt=""
           width={1920}
           height={100}
-          className="w-full h-auto [filter:brightness(0)_saturate(100%)_invert(91%)_sepia(8%)_saturate(1094%)_hue-rotate(196deg)_brightness(98%)_contrast(96%)]"
+          className="w-full h-auto filter-[brightness(0)_saturate(100%)_invert(91%)_sepia(8%)_saturate(1094%)_hue-rotate(196deg)_brightness(98%)_contrast(96%)]"
         />
       </div>
     </section>
