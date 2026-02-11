@@ -267,7 +267,7 @@ export function AreaAtuacao() {
       </div>
       <div className="absolute bottom-0 left-0 w-full">
         <Image
-          src="/lines.svg"
+          src="/Lines.svg"
           alt=""
           width={1920}
           height={100}

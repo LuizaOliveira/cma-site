@@ -179,7 +179,7 @@ export function Testimonials() {
   return (
     <section ref={sectionRef} className="bg-primary py-12 lg:py-20 px-4 lg:px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full mt-4 lg:mt-9 pointer-events-none opacity-60">
-        <Image src="/lines.svg" alt="" width={1920} height={100} className="w-full h-10 lg:h-auto object-cover" />
+        <Image src="/Lines.svg" alt="" width={1920} height={100} className="w-full h-10 lg:h-auto object-cover" />
       </div>
 
       <div className="container mx-auto relative z-10">
@@ -204,7 +204,7 @@ export function Testimonials() {
                 .map((item, index) => (
                   <div
                     key={index}
-                    className="bg-secondary-blue p-6 lg:p-8 rounded-2xl border border-white/5 relative w-full lg:max-w-[540px] testimonial-card min-h-[420px] flex flex-col justify-between"
+                    className="bg-secondary-blue p-6 lg:p-8 rounded-2xl border border-white/5 relative w-full lg:max-w-135 testimonial-card min-h-105 flex flex-col justify-between"
                   >
                     <Image
                       src="/Vector.svg"
