@@ -1,137 +1,296 @@
-'use client'
+"use client";
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { Icon } from "@iconify/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-import { useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { Icon } from '@iconify/react';
-import { SobreNosCard } from '../ui/SobreNosCard';
-import { SectionTitle } from '../ui/SectionTitle';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { DURATIONS, EASINGS } from '../../lib/animations/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function SobreNos() {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const checkListRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card2Ref = useRef<HTMLDivElement>(null);
+
+  // Refs específicos para animação da seção "Nossa Essência"
+  const essenceImageRef = useRef<HTMLDivElement>(null);
+  const essenceTitleRef = useRef<HTMLHeadingElement>(null);
+  const essenceDescriptionRef = useRef<HTMLParagraphElement>(null);
+  const essenceItem1Ref = useRef<HTMLLIElement>(null);
+  const essenceItem2Ref = useRef<HTMLLIElement>(null);
+
+  // Refs para animação da seção "Advocacia para Servidores Públicos"
+  const advocacyImageRef = useRef<HTMLDivElement>(null);
+  const advocacyTitleRef = useRef<HTMLHeadingElement>(null);
+  const advocacyDescriptionRef = useRef<HTMLParagraphElement>(null);
+
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    // Animação elegante e institucional para a seção "Nossa Essência"
+    const animateEssenceSection = () => {
+      if (prefersReducedMotion) return;
 
-    const ctx = gsap.context(() => {
-      const shouldAnimate = !prefersReducedMotion;
-      const animationDuration = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slow;
+      // Função para resetar elementos ao estado inicial
+      const resetElements = () => {
+        gsap.set(essenceImageRef.current, {
+          opacity: 0,
+          x: -40
+        });
 
-      // Timeline principal com entrada dos elementos
-      const tl = gsap.timeline({
-        defaults: { ease: EASINGS.easeOut },
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          toggleActions: 'play none none reverse'
-        }
+        gsap.set([essenceTitleRef.current, essenceDescriptionRef.current, essenceItem1Ref.current, essenceItem2Ref.current], {
+          opacity: 0,
+          y: 30
+        });
+      };
+
+      // Função para animar elementos
+      const animateElements = () => {
+        // Timeline para animação sequencial elegante
+        const tl = gsap.timeline();
+
+        // 1. Imagem à esquerda - fade + movimento horizontal suave
+        tl.to(essenceImageRef.current, {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "power2.out"
+        })
+
+          // 2. Título "Nossa Essência" - fade + movimento vertical
+          .to(essenceTitleRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out"
+          }, "-=0.5") // Inicia 0.3s após a imagem começar
+
+          // 3. Parágrafo descritivo
+          .to(essenceDescriptionRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out"
+          }, "-=0.4") // Intervalo de 0.2s
+
+          // 4. Primeiro bloco "Valores que nos Guiam"
+          .to(essenceItem1Ref.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out"
+          }, "-=0.35") // Intervalo de 0.25s
+
+          // 5. Segundo bloco "Essência Colaborativa"
+          .to(essenceItem2Ref.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out"
+          }, "-=0.3"); // Intervalo de 0.2s
+      };
+
+      // Definir estado inicial
+      resetElements();
+
+      // Criar ScrollTrigger que executa sempre que entra na tela
+      ScrollTrigger.create({
+        trigger: card1Ref.current,
+        start: "top 75%",
+        end: "bottom 25%",
+        onEnter: animateElements,     // Quando entra descendo
+        onEnterBack: animateElements, // Quando entra subindo
+        onLeave: resetElements,       // Reset quando sai descendo
+        onLeaveBack: resetElements    // Reset quando sai subindo
       });
+    };
 
-      // Animação do título
-      tl.fromTo(titleRef.current,
-        { y: shouldAnimate ? 30 : 0, opacity: 0 },
-        { y: 0, opacity: 1, duration: animationDuration }
-      );
+    animateEssenceSection();
 
-      // Animação do texto
-      tl.fromTo(textRef.current,
-        { y: shouldAnimate ? 20 : 0, opacity: 0 },
-        { y: 0, opacity: 1, duration: animationDuration },
-        shouldAnimate ? '-=0.3' : '-=0.05'
-      );
-
-      // Animação da lista de checks
-      tl.fromTo(checkListRef.current?.children || [],
-        { y: shouldAnimate ? 15 : 0, opacity: 0 },
-        { y: 0, opacity: 1, duration: animationDuration, stagger: 0.1 },
-        shouldAnimate ? '-=0.2' : '-=0.05'
-      );
-
-      // Animação das imagens
-      tl.fromTo(imagesRef.current,
-        { scale: shouldAnimate ? 0.9 : 1, opacity: 0 },
-        { scale: 1, opacity: 1, duration: prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower },
-        shouldAnimate ? '-=0.4' : '-=0.05'
-      );
-
-      // Animação dos cards com stagger
-      tl.fromTo(cardsRef.current?.children || [],
-        { y: shouldAnimate ? 25 : 0, opacity: 0 },
-        { y: 0, opacity: 1, duration: animationDuration, stagger: 0.15 },
-        shouldAnimate ? '-=0.3' : '-=0.05'
-      );
-
-    }, sectionRef);
-
-    return () => ctx.revert();
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, [prefersReducedMotion]);
 
   return (
-    <section id="sobre-nos" ref={sectionRef} className="py-8 md:py-16 bg-[#F2F4F5] relative">
-      <div className="container mx-auto px-4 md:px-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 mt-8 gap-8 lg:gap-0">
-          <div className="lg:col-span-6">
-            <div ref={titleRef}>
-              <SectionTitle subtitle='Sobre nós' title='Tradição, compromisso'>e excelência jurídica</SectionTitle>
-            </div>
-            <div ref={imagesRef} className='lg:hidden xl:hidden'>
+    <section
+      id="sobre-nos"
+      className="py-10 sm:py-16 lg:py-20 bg-white border-0 "
+    >
+      <div className="container mx-auto px-4 mt-20 ">
+        {/* Título da seção */}
+        {/* <AnimatedSection animation="fadeUp"> */}
+        {/* <SectionTitle title='Nossa' subtitle='Aqui o servidor público tem voz' center dark>Área De Atuação</SectionTitle> */}
+        {/* </AnimatedSection> */}
+
+        {/* Primeira linha - Principal público */}
+        <div
+          ref={card1Ref}
+          className=" grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-4 lg:gap-10 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg "
+          style={{
+            clipPath: "polygon(40px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 40px)",
+          }}
+        >
+          <div ref={essenceImageRef} className="relative md:col-span-1">
+            <div className="relative w-96 h-125 rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/equipe-resp.svg"
-                alt="Tablet com notificações para servidores públicos"
-                width={1000}
-                height={1000}
-                className="rounded-xl w-full h-auto"
+                src="/smilily-woman.png"
+                alt="Conheça nossa história"
+                fill
+                className="object-cover"
               />
 
-            </div>
-            <p ref={textRef} className="text-[#6A80B0] mt-4 text-justify leading-relaxed md:leading-loose text-base md:text-lg">Somos um escritório que pratica a advocacia com visão estratégica e inovação para que os nossos resultados apresentem sempre melhoria contínua em todos os âmbitos desde os processos operacionais aos gerenciais. Com foco em resultados, desenvolvemos soluções customizadas para os servidores públicos, com ênfase nos servidores da educação</p>
-            <div ref={checkListRef} className='mt-10'>
-              <div className='text-[#6A80B0] flex items-center mt-4 md:mt-6 text-sm md:text-base'>
-                <Icon icon="lets-icons:check-fill" className="inline-block text-secondary w-7 h-7 md:w-9 md:h-9 mr-2 shrink-0" />
-                Professores Ativos e Aposentados
-              </div>
-              <div className='text-[#6A80B0] flex items-center mt-4 md:mt-6 text-sm md:text-base'>
-                <Icon icon="lets-icons:check-fill" className="inline-block text-secondary w-7 h-7 md:w-9 md:h-9 mr-2 shrink-0" />
-                Servidores públicos
+              <div
+                className="absolute bottom-0 left-0 w-full 
+                    bg-[#E86000] 
+                    flex items-center justify-between 
+                    px-6 py-5 
+                    rounded-b-2xl"
+              >
+                <p className="text-white font-semibold">
+                  Conheça nossa história
+                </p>
+
+                <button
+                  className="bg-[#0B1B3B] 
+                         rounded-full 
+                         p-3 
+                         hover:scale-105 
+                         transition"
+                >
+                  <Icon
+                    icon="mdi:arrow-right"
+                    className="w-5 h-5 text-[#E86000]"
+                  />
+                </button>
               </div>
             </div>
           </div>
-          <div className="lg:col-span-6  justify-center items-center mt-8 hidden lg:mt-0 sm:hidden md:hidden lg:flex xl:flex">
-            <div ref={imagesRef} className="h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full relative mt-20">
-              <Image src="/fotoEscritorio.png" alt="escritorio" layout="fill" objectFit="cover" className="rounded-full" />
-              <div className="h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 rounded-full relative -right-32 sm:-right-44 md:-right-52 lg:-right-64 bottom-4 sm:bottom-6 md:bottom-8">
-                <Image src="/fotoAssinando.png" alt="assinando" layout="fill" objectFit="cover" className="rounded-full" />
-              </div>
+
+          {/* Conteúdo Principal público */}
+          <div className="md:col-span-2 space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2  md:text-left ">
+            <div className="items-center justify-center my-5">
+              <h3
+                ref={essenceTitleRef}
+                className="text-xl sm:text-2xl lg:text-4xl font-extrabold text-[#2D3134]"
+              >
+                Nossa Essência
+              </h3>
+              <p
+                ref={essenceDescriptionRef}
+                className="text-sm sm:text-base lg:text-[0.9rem]  md:text-sm leading-relaxed pr-5 text-justify font-normal text-[#2D3134] mt-6"
+              >
+                Somos um escritório em evolução, com atuação estratégica e foco
+                em soluções jurídicas eficazes. Trabalhamos de forma integrada
+                na resolução de demandas complexas, com destaque para a área de
+                servidores públicos, onde reunimos mais de oito anos de
+                experiência e uma equipe multidisciplinar. Comprometidos com
+                clientes, sociedade e equipe, promovemos crescimento e melhoria
+                contínua.
+              </p>
             </div>
+
+            {/* Lista de serviços */}
+            <ul className="space-y-3 sm:space-y-4">
+              <li ref={essenceItem1Ref} className=" items-center gap-10 flex">
+                <div className="bg-[#FFFCF9] p-2 rounded-lg justify-center items-center ">
+                  <Icon
+                    icon="streamline:target-solid"
+                    className="w-7 h-7 ml-2.5 text-[#E86000] inline-block mr-2"
+                  />
+                </div>
+                <div>
+                  <span className=" text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-semibold text-[#2D3134]">
+                    Valores que nos Guiam
+                  </span>
+                  <p className=" w-4/5 text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal text-[#676A6C]">
+                    Ética, transparência e compromisso orientam cada decisão,
+                    garantindo segurança e confiança em todas as etapas do
+                    atendimento.
+                  </p>
+                </div>
+              </li>
+
+              <li ref={essenceItem2Ref} className=" items-center gap-8 flex">
+                <div className="bg-[#FFFCF9] p-2 rounded-lg justify-center items-center ">
+                  <Icon
+                    icon="vaadin:handshake"
+                    className="w-7 h-7 ml-2.5 text-[#E86000] inline-block mr-2"
+                  />
+                </div>
+                <div>
+                  <span className=" text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-semibold text-[#2D3134]">
+                    Essência Colaborativa
+                  </span>
+                  <p className=" w-4/5 text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal text-[#676A6C]">
+                    Adotamos uma abordagem estratégica, buscando soluções
+                    jurídicas eficazes e personalizadas para cada cliente, com
+                    foco em resultados concretos.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div ref={cardsRef} className='mt-14 md:mt-24 flex flex-wrap sm:gap-8 md:gap-12 lg:gap-40'>
-          <SobreNosCard titulo='Transparencia' texto='Mais de 15 mil ações procedentes' icone="octicon:law-16" />
-          <SobreNosCard titulo='Atuação' texto='Atuação em seis Estados brasileiros' icone="game-icons:brazil" />
-          <SobreNosCard titulo='Atuação' texto='Quase 10 anos de atuação na área jurídica' icone="fa7-solid:hourglass-2" />
+        <div
+          ref={card2Ref}
+          className="bg-secondary-blue grid md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg lg:hidden xl:hidden"
+          style={{
+            clipPath:
+              "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)",
+          }}
+        >
+
+          <div ref={advocacyImageRef} className="relative md:col-span-1">
+            <div className="flex gap-4 items-center">
+              <div className="rounded-lg overflow-hidden shadow-2xl">
+                <Image
+                  src="/working-morning-woman.jpg"
+                  alt="Equipe de advocacia trabalhando"
+                  fill
+                  className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg clip-path-corner-right"
+                  style={{
+                    clipPath:
+                      "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="md:col-span-2 space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2 text-center md:text-left  ">
+            <h3
+              ref={advocacyTitleRef}
+              className="text-xl sm:text-2xl lg:text-3xl font-medium"
+            >
+              Advocacia para <br />
+              servidores públicos
+            </h3>
+            <p
+              ref={advocacyDescriptionRef}
+              className="text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal"
+            >
+              O núcleo do Direito Administrativo direciona sua atuação e sua
+              atenção nos direitos dos Servidores Públicos através de assessoria
+              e consultoria jurídica com o escopo de esclarecer direitos,
+              analisar documentos e processos de forma a estabelecer a melhor
+              solução para cada pleito, uma vez que é necessário a discussão da
+              legalidade e/ou constitucionalidade do direito e obrigações por
+              meio da interpretação de novas normas e jurisprudência, sejam elas
+              decorrentes da falta de cumprimento dos direitos da Administração
+              Pública, sejam em razão de erros materiais ou de interpretação
+              pacificadas pelos tribunais.
+            </p>
+          </div>
         </div>
+
+
       </div>
-      <div className="absolute bottom-0 left-0 w-full">
-        <Image
-          src="/lines.svg"
-          alt=""
-          width={1920}
-          height={100}
-          className="w-full h-auto [filter:brightness(0)_saturate(100%)_invert(91%)_sepia(8%)_saturate(1094%)_hue-rotate(196deg)_brightness(98%)_contrast(96%)]"
-        />
-      </div>
+
     </section>
   );
 }

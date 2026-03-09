@@ -1,26 +1,27 @@
 "use client";
 import { Header } from './components/layout/Header';
 import { Hero } from './components/sections/Hero';
-import { AreaAtuacao } from './components/sections/AreaAtuacao';
+import { SobreNos  } from './components/sections/SobreNos';
 import { Footer } from './components/layout/Footer';
-import { SobreNos } from './components/sections/SobreNos';
+import { AreaAtuacao } from './components/sections/AreaAtuacao';
 import { NossaEquipe } from './components/sections/NossaEquipe';
-
+import { ConsultingHero } from './components/sections/ConsultingHero';
 import { Testimonials } from './components/sections/Testimonials';
 import { Contact } from './components/sections/Contact';
 import { NewsFilterClient } from './components/features/news/NewsFilterClient';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Header />
-      <Hero />
-      <AreaAtuacao />
+      {/* <Hero /> */}
+      <ConsultingHero />
       <SobreNos />
+      <AreaAtuacao />
       <NossaEquipe />
       <Testimonials />
-      <Contact />
       <NewsFilterClient/>
+      <Contact />
       <Footer />
     </main>
   );

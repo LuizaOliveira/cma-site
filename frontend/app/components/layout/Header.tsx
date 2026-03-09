@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { Icon } from '@iconify/react';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOnConsultingHero, setIsOnConsultingHero] = useState(true);
 
   // Detectar scroll para adicionar sombra
   useEffect(() => {
@@ -14,6 +16,22 @@ export function Header() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Detectar se está na seção ConsultingHero
+  useEffect(() => {
+    const consultingSection = document.getElementById('consulting-hero');
+    if (!consultingSection) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsOnConsultingHero(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(consultingSection);
+    return () => observer.disconnect();
   }, []);
 
   const menuItems = [
@@ -43,15 +61,18 @@ export function Header() {
 
   return (
     <header
-      className={`bg-white fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg' : 'shadow-sm'
-        }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isOnConsultingHero 
+          ? 'bg-transparent backdrop-blur-0' 
+          : 'bg-white/80 backdrop-blur-lg shadow-sm'
+      }`}
     >
-      <div className="container mx-auto px-4 lg:px-6">
+      <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => scrollToSection('hero')}>
             <Image
-              src="/logo.svg"
+              src="/logo-test.svg"
               alt="Clodonil Monteiro Advocacia"
               width={180}
               height={40}
@@ -61,19 +82,38 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-1">
             {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="relative text-[#2C3056] hover:text-secondary transition-colors duration-300 text-sm font-medium group"
-              >
-                {item.label}
-                {/* Underline animado */}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
-              </button>
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`relative px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+                    isOnConsultingHero 
+                      ? 'text-white hover:bg-white/10' 
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {item.label}
+                </button>
             ))}
           </nav>
+
+          {/* Icons e Button */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Search Icon */}
+            <button className={`p-2 rounded-full transition-all duration-300 ${
+              isOnConsultingHero 
+                ? 'text-white hover:bg-white/10' 
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}>
+              <Icon icon="mdi:magnify" className="w-5 h-5" />
+            </button>
+
+            {/* Button */}
+            <button className="bg-[#E86100] hover:bg-secondary text-white text-sm font-bold px-6 py-2.5 rounded-full flex items-center gap-2 transition-all duration-300 hover:shadow-lg">
+              Acessar Clodonews
+            </button>
+          </div>
 
           {/* Mobile menu button */}
           <button
@@ -91,7 +131,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
             }`}
         >
           <nav className="flex flex-col space-y-1 py-4 border-t border-slate-200">
@@ -108,6 +148,9 @@ export function Header() {
                 {item.label}
               </button>
             ))}
+            <button className="mt-4 bg-[#E86100] hover:bg-secondary text-white text-sm font-bold px-6 py-2.5 rounded-full w-full transition-all duration-300">
+              Acessar Clodonews
+            </button>
           </nav>
         </div>
       </div>

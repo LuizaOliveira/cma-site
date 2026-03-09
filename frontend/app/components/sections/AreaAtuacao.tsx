@@ -1,279 +1,395 @@
-"use client"
+'use client'
+
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { Icon } from '@iconify/react';
+import { SobreNosCard } from '../ui/SobreNosCard';
 import { SectionTitle } from '../ui/SectionTitle';
-import { Icon } from "@iconify/react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { DURATIONS, EASINGS } from '../../lib/animations/constants';
-import { CheckItem } from '../ui/CheckItem';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function AreaAtuacao() {
   const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const card1Ref = useRef<HTMLDivElement>(null);
-  const card2Ref = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const checkListRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const cardsGridRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!contentRef.current) return;
+    if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      const animDuration = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slowest;
       const shouldAnimate = !prefersReducedMotion;
 
-      // Animações do conteúdo geral
-      const animateContentIn = () => {
-        gsap.fromTo(contentRef.current,
-          { opacity: 0, y: shouldAnimate ? 60 : 0 },
-          { opacity: 1, y: 0, ease: EASINGS.easeOut, duration: animDuration }
+      // ⚠️ IMPORTANTE: Definir estado inicial dos cards ANTES do trigger
+      // Isso evita o "flash" de aparição inicial
+      const cardElements = cardsGridRef.current?.querySelectorAll('.animatable-card');
+      if (cardElements && cardElements.length > 0) {
+        gsap.set(cardElements, {
+          opacity: 0,
+          y: 100
+        });
+      }
+
+      // Timeline coordenada com hierarquia visual
+      let hasAnimated = false;
+
+      const animateAll = () => {
+        if (hasAnimated) return;
+        hasAnimated = true;
+
+        const tl = gsap.timeline();
+
+        // 1. PRIMEIRO: Título sobe de baixo - duração perceptível
+        tl.fromTo(
+          titleRef.current,
+          {
+            opacity: 0,
+            y: 100 // Começa 100px ABAIXO
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75, // Aumentado de 0.6s para ser mais elegante
+            ease: 'power2.out' // Suave e natural
+          },
+          0 // Começa no tempo 0
         );
-      };
 
-      const animateContentOut = () => {
-        if (prefersReducedMotion) {
-          gsap.to(contentRef.current, { opacity: 0, duration: DURATIONS.instant });
-          return;
+        // 2. POR ÚLTIMO: Cards sobem em sequência rápida
+        const cardElements = cardsGridRef.current?.querySelectorAll('.animatable-card');
+        
+        if (cardElements && cardElements.length > 0) {
+          // Anima cada card em sequência bem ágil
+          // Inicia 0.45s, no meio da animação do título
+          tl.to(
+            cardElements,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.4, // Reduzido para ficar ágil
+              ease: 'power2.out',
+              stagger: 0.05 // Bem próximos entre si
+            },
+            0.45 // Começa no meio do título
+          );
+
+          // Hover animations para cada card
+          cardElements.forEach((card: Element) => {
+            const cardElement = card as HTMLElement;
+            cardElement.addEventListener('mouseenter', () => {
+              gsap.to(cardElement, {
+                y: -8,
+                boxShadow: '0 15px 35px rgba(232, 96, 0, 0.15)',
+                duration: 0.3,
+                ease: 'power2.out'
+              });
+            });
+
+            cardElement.addEventListener('mouseleave', () => {
+              gsap.to(cardElement, {
+                y: 0,
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.05)',
+                duration: 0.3,
+                ease: 'power2.out'
+              });
+            });
+          });
         }
-        gsap.to(contentRef.current, { opacity: 0, y: -60, ease: EASINGS.easeIn, duration: DURATIONS.slow });
       };
 
-      // Animações do card 1
-      const animateCard1In = () => {
-        gsap.fromTo(card1Ref.current,
-          { opacity: 0, y: shouldAnimate ? 40 : 0 },
-          { opacity: 1, y: 0, ease: EASINGS.easeOut, duration: animDuration }
-        );
-      };
-
-      const animateCard1Out = () => {
-        if (prefersReducedMotion) {
-          gsap.to(card1Ref.current, { opacity: 0, duration: DURATIONS.instant });
-          return;
-        }
-        gsap.to(card1Ref.current, { opacity: 0, y: -40, ease: EASINGS.easeIn, duration: DURATIONS.slow });
-      };
-
-      // Animações do card 2
-      const animateCard2In = () => {
-        gsap.fromTo(card2Ref.current,
-          { opacity: 0, y: shouldAnimate ? 40 : 0 },
-          { opacity: 1, y: 0, ease: EASINGS.easeOut, duration: animDuration }
-        );
-      };
-
-      const animateCard2Out = () => {
-        if (prefersReducedMotion) {
-          gsap.to(card2Ref.current, { opacity: 0, duration: DURATIONS.instant });
-          return;
-        }
-        gsap.to(card2Ref.current, { opacity: 0, y: -40, ease: EASINGS.easeIn, duration: DURATIONS.slow });
-      };
-
-      // ScrollTriggers
+      // ScrollTrigger - ativa quando cards ficam visíveis
       ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top 80%',
-        end: 'bottom 20%',
-        onEnter: animateContentIn,
-        onLeave: animateContentOut,
-        onEnterBack: animateContentIn,
-        onLeaveBack: animateContentOut,
-      });
-
-      ScrollTrigger.create({
-        trigger: card1Ref.current,
+        trigger: cardsGridRef.current,
         start: 'top 85%',
-        onEnter: animateCard1In,
-        onLeave: animateCard1Out,
-        onEnterBack: animateCard1In,
-        onLeaveBack: animateCard1Out,
+        once: true,
+        onEnter: animateAll
       });
 
-      ScrollTrigger.create({
-        trigger: card2Ref.current,
-        start: 'top 85%',
-        onEnter: animateCard2In,
-        onLeave: animateCard2Out,
-        onEnterBack: animateCard2In,
-        onLeaveBack: animateCard2Out,
+      const shouldAnimate2 = !prefersReducedMotion;
+      const animationDuration2 = prefersReducedMotion ? DURATIONS.instant : DURATIONS.slow;
+
+      // Remover timeline dos outros elementos - deixar apenas os cards animados
+      // (comentado pois os cards já têm sua própria animação com ScrollTrigger)
+
+      // Timeline principal com entrada dos elementos (resto da seção) - DESATIVADO
+      /*
+      const tl = gsap.timeline({
+        defaults: { ease: EASINGS.easeOut },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        }
       });
+
+      // Animação do título
+      tl.fromTo(titleRef.current,
+        { y: shouldAnimate2 ? 30 : 0, opacity: 0 },
+        { y: 0, opacity: 1, duration: animationDuration2 }
+      );
+
+      // Animação do texto
+      tl.fromTo(textRef.current,
+        { y: shouldAnimate2 ? 20 : 0, opacity: 0 },
+        { y: 0, opacity: 1, duration: animationDuration2 },
+        shouldAnimate2 ? '-=0.3' : '-=0.05'
+      );
+
+      // Animação da lista de checks
+      tl.fromTo(checkListRef.current?.children || [],
+        { y: shouldAnimate2 ? 15 : 0, opacity: 0 },
+        { y: 0, opacity: 1, duration: animationDuration2, stagger: 0.1 },
+        shouldAnimate2 ? '-=0.2' : '-=0.05'
+      );
+
+      // Animação das imagens
+      tl.fromTo(imagesRef.current,
+        { scale: shouldAnimate2 ? 0.9 : 1, opacity: 0 },
+        { scale: 1, opacity: 1, duration: prefersReducedMotion ? DURATIONS.instant : DURATIONS.slower },
+        shouldAnimate2 ? '-=0.4' : '-=0.05'
+      );
+
+      // Animação dos cards com stagger
+      tl.fromTo(cardsRef.current?.children || [],
+        { y: shouldAnimate2 ? 25 : 0, opacity: 0 },
+        { y: 0, opacity: 1, duration: animationDuration2, stagger: 0.15 },
+        shouldAnimate2 ? '-=0.3' : '-=0.05'
+      );
+      */
+
     }, sectionRef);
 
     return () => ctx.revert();
   }, [prefersReducedMotion]);
 
   return (
-    <section id="area-atuacao" ref={sectionRef} className="py-10 sm:py-16 lg:py-20 bg-primary border-0">
-      <div ref={contentRef} className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 ">
-        {/* Título da seção */}
-        {/* <AnimatedSection animation="fadeUp"> */}
-        <SectionTitle title='Nossa' subtitle='Aqui o servidor público tem voz' center dark>Área De Atuação</SectionTitle>
-        {/* </AnimatedSection> */}
-
-        {/* Primeira linha - Principal público */}
-        <div
-          ref={card1Ref}
-          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg "
-          style={{ clipPath: "polygon(40px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 40px)" }}
-        >
-          {/* <div className="order-2 md:order-1"> */}
-          {/* Imagem do escritório */}
-          <div className="relative">
-            <div className="rounded-lg overflow-hidden shadow-2xl">
-              <Image
-                src="/office-meeting.svg"
-                alt="Escritório de advocacia - sala de reuniões"
-                width={600}
-                height={450}
-                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg"
-                style={{ clipPath: "polygon(40px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 40px)" }}
-              />
-              {/* </div> */}
+    
+    <section id="area-atuacao" ref={sectionRef} className="bg-white px-12">
+      <div className="bg-[#071B42] rounded-3xl p-10 shadow-xl mx-12 relative">
+        <div className="container mx-auto px-4 md:px-0">
+          <div className="grid grid-cols-1 lg:grid-cols-12 mt-8 gap-8 lg:gap-0">
+            <div className="lg:col-span-6">
+              <div ref={titleRef}>
+                <SectionTitle subtitle='Aqui o servidor público tem voz' title='Nossa' dark>área de Atuação</SectionTitle>
+              </div>
             </div>
           </div>
-
-
-
-          {/* Conteúdo Principal público */}
-          <div className="space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2  md:text-left ">
-            {/* <AnimatedSection animation="fadeUp" delay={0.2}> */}
-            <div className='itens-center justify-center'>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-medium">Principal público</h3>
-              <p className="text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal">
-                Com ampla experiência no Direito do Direito Administrativo, nossa
-                equipe assessora os servidores públicos da forma que você
-                precisa, fazendo a melhor avaliação das relações existentes entre
-                servidor e a competente administração pública interna.
-              </p>
-
+          <div className='grid grid-cols-4 gap-14 mt-6 mb-14' ref={cardsGridRef}>
+            <div className="p-5 bg-linear-to-br from-[#0F234A] via-[#0F234A] to-[#0b214d] shadow-xl animatable-card transition-all duration-300">
+              <Icon icon="hugeicons:teacher" className="w-8 h-8 text-[#E86000] mb-10" />
+              <p className="text-white mb-12">standard dummy text ever since the 1500sstandard dummy text ever since the 1500s</p>
             </div>
-            {/* </AnimatedSection> */}
 
-            {/* Lista de serviços */}
-            <ul className="space-y-3 sm:space-y-4">
-              <li className="flex md:justify-start">
-                <CheckItem title='Professores ativos e aposentados' />
+            <div className="p-5 bg-linear-to-br from-[#0F234A] via-[#0F234A] to-[#0b214d] shadow-xl animatable-card transition-all duration-300">
+              <Icon icon="hugeicons:teacher" className="w-8 h-8 text-[#E86000] mb-10" />
+              <p className="text-white mb-12">standard dummy text ever since the 1500sstandard dummy text ever since the 1500s</p>
+            </div>
 
-              </li>
-              <li className="flex md:justify-start">
-                <CheckItem title='Servidores públicos' />
-                <span className="text-ligth-gray text-sm sm:text-base">Servidores públicos</span>
-              </li>
-              <li className="flex md:justify-start">
-                <CheckItem title='Servidores públicos' />
-              </li>
-            </ul>
+            <div className="p-5 bg-linear-to-br from-[#0F234A] via-[#0F234A] to-[#0b214d] shadow-xl animatable-card transition-all duration-300">
+              <Icon icon="hugeicons:teacher" className="w-8 h-8 text-[#E86000] mb-10" />
+              <p className="text-white mb-12">standard dummy text ever since the 1500sstandard dummy text ever since the 1500s</p>
+            </div>
+
+            <div className="p-5 bg-linear-to-br from-[#0F234A] via-[#0F234A] to-[#0b214d] shadow-xl animatable-card transition-all duration-300">
+              <Icon icon="hugeicons:teacher" className="w-8 h-8 text-[#E86000] mb-10" />
+              <p className="text-white mb-12">standard dummy text ever since the 1500sstandard dummy text ever since the 1500s</p>
+            </div>
           </div>
         </div>
 
+        {/* Rabinho */}
         <div
-          ref={card1Ref}
-          className="bg-secondary-blue grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg lg:hidden xl:hidden"
-          style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
-        >
-          {/* <div className="order-2 md:order-1"> */}
-          {/* Imagem do escritório */}
-          <div className="relative">
-            <div className="rounded-lg overflow-hidden shadow-2xl">
-              <Image
-                src="/office-team.svg"
-                alt="Equipe de advocacia trabalhando"
-                width={500}
-                height={400}
-                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg clip-path-corner-right"
-                style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
-              />
-              {/* </div> */}
+          className="absolute -bottom-10 left-35 w-16 h-10 bg-[#071B42]"
+          style={{
+            clipPath:
+              "path('M0 0 Q8 0 12 6 L28 24 Q32 28 36 24 L52 6 Q56 0 64 0 Z')",
+          }}
+        />
+      </div>
+      <div className="mx-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-20">
+
+          {/* ITEM */}
+          <div className="flex flex-col items-center gap-3 px-8 border-r border-[#F0F0F0] last:border-r-0">
+            <div className="bg-[#F5F5F5] w-full max-w-50 py-3 px-5 shadow-md rounded-lg">
+              <p className="text-center text-[#E86000] font-bold text-3xl">+29 mil</p>
+            </div>
+            <div className="text-center text-darkgray font-medium">
+              Processos Protocolados
             </div>
           </div>
 
-
-
-          {/* Conteúdo Principal público */}
-          <div className="space-y-4 sm:space-y-6 text-ligth-gray order-1 md:order-2 text-center md:text-left  ">
-            {/* <AnimatedSection animation="fadeUp" delay={0.2}> */}
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-medium">Advocacia para <br/>servidores públicos</h3>
-            <p className="text-sm sm:text-base lg:text-md  md:text-sm leading-relaxed pr-5 text-justify font-normal">
-              O núcleo do Direito Administrativo direciona sua atuação e sua atenção nos direitos dos Servidores Públicos
-              através de assessoria e consultoria jurídica com o escopo de esclarecer direitos, analisar documentos e processos
-              de forma a estabelecer a melhor solução para cada pleito, uma vez que é necessário a discussão da legalidade e/ou
-              constitucionalidade do direito e obrigações por meio da interpretação de novas normas e jurisprudência, sejam elas
-              decorrentes da falta de cumprimento dos direitos da Administração Pública, sejam em razão de erros materiais ou de
-              interpretação pacificadas pelos tribunais.
-            </p>
-            {/* </AnimatedSection> */}
-          </div>
-        </div>
-
-        {/* Segunda linha - Advocacia para servidores públicos */}
-        <div
-          ref={card1Ref}
-          className="bg-secondary-blue hidden lg:grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-8 lg:mb-12 px-3 sm:px-6 lg:px-5 py-4 lg:py-5 rounded-lg"
-          style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
-        >
-          <div className="space-y-4 sm:space-y-6 text-white order-1 md:order-1 px-2 sm:px-6 lg:px-10 my-2 sm:my-4 text-center md:text-left">
-            <div className='flex gap-3 justify-center md:justify-start text-ligth-gray'>
-              <div className='h-6 sm:h-16 w-1 bg-secondary '></div>
-              <h3 className="w-80  text-xl sm:text-2xl lg:text-3xl font-medium">
-                Advocacia para servidores públicos
-              </h3>
+          <div className="flex flex-col items-center gap-3 px-8 border-r border-[#F0F0F0] last:border-r-0">
+            <div className="bg-[#F5F5F5] w-full max-w-50 py-3 px-5 shadow-md rounded-lg">
+              <p className="text-center text-[#E86000] font-bold text-3xl">+8 mil</p>
             </div>
-            <p className="text-sm sm:text-base lg:text-md leading-relaxed text-ligth-gray text-justify font-normal">
-              O núcleo do Direito Administrativo direciona sua atuação e sua atenção nos direitos dos Servidores Públicos
-              através de assessoria e consultoria jurídica com o escopo de esclarecer direitos, analisar documentos e processos
-              de forma a estabelecer a melhor solução para cada pleito, uma vez que é necessário a discussão da legalidade e/ou
-              constitucionalidade do direito e obrigações por meio da interpretação de novas normas e jurisprudência, sejam elas
-              decorrentes da falta de cumprimento dos direitos da Administração Pública, sejam em razão de erros materiais ou de
-              interpretação pacificadas pelos tribunais.
-            </p>
-          </div>
-
-          {/* Imagem do escritório 2 */}
-          <div className="relative order-2 md:order-2">
-            <div className="rounded-lg overflow-hidden shadow-2xl">
-              <Image
-                src="/office-team.svg"
-                alt="Equipe de advocacia trabalhando"
-                width={500}
-                height={400}
-                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-112 object-cover rounded-lg clip-path-corner-right"
-                style={{ clipPath: "polygon(0% 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, 0% 100%)" }}
-              />
+            <div className="text-center text-darkgray font-medium">
+              Clientes Satisfeitos
             </div>
           </div>
 
-        </div>
-
-        {/* CTA de Contato - Dúvidas */}
-        <div className="text-center mt-16 lg:mt-20">
-          <div className="text-white mb-4">
-            <span className="text-lg sm:text-xl lg:text-xl">Dúvidas? </span>
-            <span className="text-lg sm:text-xl lg:text-xl text-secondary">Entre em contato conosco</span>
+          <div className="flex flex-col items-center gap-3 px-8 border-r border-[#F0F0F0] last:border-r-0">
+            <div className="bg-[#F5F5F5] w-full max-w-50 py-3 px-5 shadow-md rounded-lg">
+              <p className="text-center text-[#E86000] font-bold text-3xl">99%</p>
+            </div>
+            <div className="text-center text-darkgray font-medium">
+              de procedência
+            </div>
           </div>
-          <a
-            href="https://wa.me/558433342179"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-secondary hover:bg-orange-600 text-white font-semibold my-10 px-6 py-3 rounded-full transition-colors duration-300 shadow-lg hover:shadow-xl"
-          >
-            <Icon icon="ic:baseline-whatsapp" className="w-6 h-6" />
-            <span >(84) 3334-2179</span>
-          </a>
+
+          <div className="flex flex-col items-center gap-3 px-8">
+            <div className="bg-[#F5F5F5] w-full max-w-50 py-3 px-5 shadow-md rounded-lg">
+              <p className="text-center text-[#E86000] font-bold text-3xl">+8 anos</p>
+            </div>
+            <div className="text-center text-darkgray font-medium">
+              Experiência com servidores
+            </div>
+          </div>
+
         </div>
       </div>
-      {/* <div className="absolute bottom-0 left-0 w-full">
-        <Image
-          src="/lines.svg"
-          alt=""
-          width={1920}
-          height={100}
-          className="w-full h-auto"
-        />
+
+
+
+      {/* <div className="container mx-auto px-4 md:px-0 mt-5">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 justify-between">
+
+          <div className='w-xl'>
+            <SectionTitle subtitle='Sobre nós' title='Tradição, compromisso' >e excelência jurídica</SectionTitle>
+
+          </div>
+          <p className='text-[#12141D] w-2xl text-md font-light text-justify'>
+            Somos um escritório que pratica a advocacia com visão estratégica e inovação para que os nossos resultados
+            apresentem sempre melhoria contínua em todos os âmbitos desde os processos operacionais aos gerenciais.
+            Com foco em resultados, desenvolvemos soluções customizadas para os servidores públicos, com ênfase nos
+            servidores da educação
+          </p>
+        </div>
+
+        <div className='grid grid-cols-3 gap-8 my-6'>
+
+          <div>
+            <div className="flex flex-col lg:flex-row items-center gap-8 mt-10 mb-8">
+
+              <div className=" p-2 bg-secondary rounded-full flex items-center justify-center text-white z-10"
+              >
+                <Icon icon="cuida:bullseye-outline" className="w-5 h-5 " />
+              </div>
+            </div>
+
+            <div className='mr-10'>
+              <p className='font-bold text-md text-[#12141D] pb-3'> Missão</p>
+              <p className='text-[#12141D] text-md text-justify font-light'>
+                Garantir a defesa dos direitos dos servidores públicos, com foco na excelência e na ética,
+                promovendo soluções jurídicas eficazes e personalizadas para cada cliente.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex flex-col lg:flex-row items-center gap-8 mt-10 mb-8">
+
+              <div className=" p-2 bg-primary rounded-full flex items-center justify-center text-white z-10"
+              >
+                <Icon icon="famicons:telescope-outline" className="w-5 h-5 " />
+              </div>
+            </div>
+
+            <div className='mr-10'>
+              <p className='font-bold text-md text-[#12141D] pb-3'> Visão</p>
+              <p className='text-[#12141D] text-md text-justify font-light'>
+                Garantir a defesa dos direitos dos servidores públicos, com foco na excelência e na ética,
+                promovendo soluções jurídicas eficazes e personalizadas para cada cliente.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex flex-col lg:flex-row items-center gap-8 mt-10 mb-8">
+
+              <div className=" p-2 bg-secondary rounded-full flex items-center justify-center text-white z-10"
+              >
+                <Icon icon="material-symbols-light:balance" className="w-5 h-5 " />
+              </div>
+            </div>
+
+            <div className='mr-10'>
+              <p className='font-bold text-md text-[#12141D] pb-3'> Valores</p>
+              <p className='text-[#12141D] text-md text-justify font-light'>
+                Garantir a defesa dos direitos dos servidores públicos, com foco na excelência e na ética,
+                promovendo soluções jurídicas eficazes e personalizadas para cada cliente.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
       </div> */}
+
+
     </section>
+    // <section id="sobre-nos" ref={sectionRef} className="py-8 md:py-16 bg-[#F2F4F5] relative">
+    //   <div className="container mx-auto px-4 md:px-0">
+    //     <div className="grid grid-cols-1 lg:grid-cols-12 mt-8 gap-8 lg:gap-0">
+    //       <div className="lg:col-span-6">
+    //         <div ref={titleRef}>
+    //           <SectionTitle subtitle='Sobre nós' title='Tradição, compromisso'>e excelência jurídica</SectionTitle>
+    //         </div>
+    //         <div ref={imagesRef} className='lg:hidden xl:hidden'>
+    //           <Image
+    //             src="/equipe-resp.svg"
+    //             alt="Tablet com notificações para servidores públicos"
+    //             width={1000}
+    //             height={1000}
+    //             className="rounded-xl w-full h-auto"
+    //           />
+
+    //         </div>
+    //         <p ref={textRef} className="text-[#6A80B0] mt-4 text-justify leading-relaxed md:leading-loose text-base md:text-lg">Somos um escritório que pratica a advocacia com visão estratégica e inovação para que os nossos resultados apresentem sempre melhoria contínua em todos os âmbitos desde os processos operacionais aos gerenciais. Com foco em resultados, desenvolvemos soluções customizadas para os servidores públicos, com ênfase nos servidores da educação</p>
+    //         <div ref={checkListRef} className='mt-10'>
+    //           <div className='text-[#6A80B0] flex items-center mt-4 md:mt-6 text-sm md:text-base'>
+    //             <Icon icon="lets-icons:check-fill" className="inline-block text-secondary w-7 h-7 md:w-9 md:h-9 mr-2 shrink-0" />
+    //             Professores Ativos e Aposentados
+    //           </div>
+    //           <div className='text-[#6A80B0] flex items-center mt-4 md:mt-6 text-sm md:text-base'>
+    //             <Icon icon="lets-icons:check-fill" className="inline-block text-secondary w-7 h-7 md:w-9 md:h-9 mr-2 shrink-0" />
+    //             Servidores públicos
+    //           </div>
+    //         </div>
+    //       </div>
+    //       <div className="lg:col-span-6  justify-center items-center mt-8 hidden lg:mt-0 sm:hidden md:hidden lg:flex xl:flex">
+    //         <div ref={imagesRef} className="h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-full relative mt-20">
+    //           <Image src="/fotoEscritorio.png" alt="escritorio" layout="fill" objectFit="cover" className="rounded-full" />
+    //           <div className="h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 rounded-full relative -right-32 sm:-right-44 md:-right-52 lg:-right-64 bottom-4 sm:bottom-6 md:bottom-8">
+    //             <Image src="/fotoAssinando.png" alt="assinando" layout="fill" objectFit="cover" className="rounded-full" />
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+
+    //     <div ref={cardsRef} className='mt-14 md:mt-24 flex flex-wrap sm:gap-8 md:gap-12 lg:gap-40'>
+    //       <SobreNosCard titulo='Transparencia' texto='Mais de 15 mil ações procedentes' icone="octicon:law-16" />
+    //       <SobreNosCard titulo='Atuação' texto='Atuação em seis Estados brasileiros' icone="game-icons:brazil" />
+    //       <SobreNosCard titulo='Atuação' texto='Quase 10 anos de atuação na área jurídica' icone="fa7-solid:hourglass-2" />
+    //     </div>
+    //   </div>
+    //   <div className="absolute bottom-0 left-0 w-full">
+    //     <Image
+    //       src="/lines.svg"
+    //       alt=""
+    //       width={1920}
+    //       height={100}
+    //       className="w-full h-auto [filter:brightness(0)_saturate(100%)_invert(91%)_sepia(8%)_saturate(1094%)_hue-rotate(196deg)_brightness(98%)_contrast(96%)]"
+    //     />
+    //   </div>
+    // </section>
   );
 }
